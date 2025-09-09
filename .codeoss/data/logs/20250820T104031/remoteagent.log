@@ -1,0 +1,16 @@
+2025-08-20 10:40:31.590 [info] 
+
+
+
+
+2025-08-20 10:40:31.605 [info] Extension host agent started.
+2025-08-20 10:40:31.618 [info] Started initializing default profile extensions in extensions installation folder. file:///home/p_budhwar/.codeoss/extensions
+2025-08-20 10:40:31.622 [info] ComputeTargetPlatform: linux-x64
+2025-08-20 10:40:31.631 [info] Completed initializing default profile extensions in extensions installation folder. file:///home/p_budhwar/.codeoss/extensions
+2025-08-20 10:40:42.596 [info] [127.0.0.1][fb7a5127][ManagementConnection] New connection established.
+2025-08-20 10:40:42.603 [info] [127.0.0.1][26ff9a1f][ExtensionHostConnection] New connection established.
+2025-08-20 10:40:44.205 [info] [127.0.0.1][26ff9a1f][ExtensionHostConnection] <1270> Launched Extension Host Process.
+2025-08-20 12:42:04.666 [info] [127.0.0.1][26ff9a1f][ExtensionHostConnection] The client has reconnected.
+2025-08-20 12:42:04.700 [info] [127.0.0.1][fb7a5127][ManagementConnection] The client has reconnected.
+2025-08-20 13:06:54.206 [info] [127.0.0.1][fb7a5127][ManagementConnection] The client has reconnected.
+2025-08-20 13:06:54.271 [info] [127.0.0.1][26ff9a1f][ExtensionHostConnection] The client has reconnected.

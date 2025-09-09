@@ -1,0 +1,4 @@
+2025-08-26 11:36:15.417 [info] Log level: Info
+2025-08-26 11:36:21.643 [warning] [GitHubBranchProtectionProvider][updateRepositoryBranchProtection] Failed to update repository branch protection: No GitHub authentication session available.
+2025-08-26 11:36:21.643 [warning] [GitHubBranchProtectionProvider][updateRepositoryBranchProtection] Failed to update repository branch protection: No GitHub authentication session available.
+2025-08-26 11:41:07.453 [warning] [GitHubSourceControlHistoryItemDetailsProvider][_loadAssignableUsers] Failed to load assignable user(s) for weimeilin79/instavibe-bootstrap: Error: No GitHub authentication session available.

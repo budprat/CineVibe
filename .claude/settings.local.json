@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(test:*)",
+      "WebSearch",
+      "Bash(tree:*)",
+      "Bash(chmod:*)",
+      "Bash(find:*)",
+      "WebFetch(domain:codelabs.developers.google.com)",
+      "Bash(for agent in director generation_platform script_analyzer visual_consistency)",
+      "Bash(ls:*)",
+      "Bash(done)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

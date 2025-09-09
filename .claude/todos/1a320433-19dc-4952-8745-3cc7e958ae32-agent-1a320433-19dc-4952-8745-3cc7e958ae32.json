@@ -1,0 +1,27 @@
+[
+  {
+    "content": "Analyze InstaVibe CodeLabs structure and key components",
+    "status": "completed",
+    "activeForm": "Analyzing CodeLabs structure"
+  },
+  {
+    "content": "Identify all InstaVibe-specific sections to adapt",
+    "status": "completed",
+    "activeForm": "Identifying InstaVibe-specific sections"
+  },
+  {
+    "content": "Create CineVibe-adapted CodeLabs markdown file",
+    "status": "completed",
+    "activeForm": "Creating CineVibe CodeLabs file"
+  },
+  {
+    "content": "Update agent descriptions for film production",
+    "status": "in_progress",
+    "activeForm": "Updating agent descriptions"
+  },
+  {
+    "content": "Adapt code examples and workflows",
+    "status": "pending",
+    "activeForm": "Adapting code examples"
+  }
+]

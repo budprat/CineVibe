@@ -1,0 +1,37 @@
+[
+  {
+    "content": "Analyze InstaVibe agent components vs CineVibe agents",
+    "status": "in_progress",
+    "activeForm": "Analyzing InstaVibe agent components vs CineVibe agents"
+  },
+  {
+    "content": "Check InstaVibe database schema vs CineVibe schema",
+    "status": "pending",
+    "activeForm": "Checking InstaVibe database schema vs CineVibe schema"
+  },
+  {
+    "content": "Verify InstaVibe web features vs CineVibe web app",
+    "status": "pending",
+    "activeForm": "Verifying InstaVibe web features vs CineVibe web app"
+  },
+  {
+    "content": "Compare deployment configurations",
+    "status": "pending",
+    "activeForm": "Comparing deployment configurations"
+  },
+  {
+    "content": "Check InstaVibe utilities vs CineVibe utilities",
+    "status": "pending",
+    "activeForm": "Checking InstaVibe utilities vs CineVibe utilities"
+  },
+  {
+    "content": "Verify InstaVibe MCP patterns in CineVibe",
+    "status": "pending",
+    "activeForm": "Verifying InstaVibe MCP patterns in CineVibe"
+  },
+  {
+    "content": "Create comprehensive comparison report",
+    "status": "pending",
+    "activeForm": "Creating comprehensive comparison report"
+  }
+]

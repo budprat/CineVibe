@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CineVibe - AI-Powered Film Production</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #fff;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 60px 0;
+        }
+        
+        h1 {
+            font-size: 4em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .tagline {
+            font-size: 1.5em;
+            opacity: 0.9;
+            margin-bottom: 40px;
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 60px 0;
+        }
+        
+        .feature-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            transition: transform 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+        
+        .feature-icon {
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+        
+        .feature-title {
+            font-size: 1.5em;
+            margin-bottom: 15px;
+        }
+        
+        .feature-description {
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+        
+        .cta-section {
+            text-align: center;
+            margin: 80px 0;
+        }
+        
+        .upload-area {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px dashed rgba(255, 255, 255, 0.5);
+            border-radius: 20px;
+            padding: 60px;
+            margin: 40px auto;
+            max-width: 600px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .upload-area:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: #fff;
+        }
+        
+        .upload-icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 15px 40px;
+            background: #fff;
+            color: #764ba2;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        
+        .workflow {
+            margin: 80px 0;
+        }
+        
+        .workflow-steps {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .step {
+            flex: 1;
+            text-align: center;
+            padding: 20px;
+            min-width: 150px;
+        }
+        
+        .step-number {
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            line-height: 50px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        
+        .step-title {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+        
+        .step-arrow {
+            font-size: 2em;
+            opacity: 0.5;
+        }
+        
+        #fileInput {
+            display: none;
+        }
+        
+        .status-message {
+            text-align: center;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            display: none;
+        }
+        
+        .status-success {
+            background: rgba(76, 175, 80, 0.2);
+            border: 1px solid #4CAF50;
+        }
+        
+        .status-error {
+            background: rgba(244, 67, 54, 0.2);
+            border: 1px solid #f44336;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎬 CineVibe</h1>
+            <p class="tagline">Transform Scripts into Cinema with AI</p>
+            <p>Powered by Google's ADK, A2A Protocol, and Multi-Agent Orchestration</p>
+        </header>
+        
+        <div class="features">
+            <div class="feature-card">
+                <div class="feature-icon">📝</div>
+                <h3 class="feature-title">Script Analysis</h3>
+                <p class="feature-description">
+                    Our AI agents parse your screenplay to extract characters, scenes, 
+                    and narrative elements automatically.
+                </p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">👤</div>
+                <h3 class="feature-title">Character DNA</h3>
+                <p class="feature-description">
+                    Maintain perfect character consistency across all generated content 
+                    with our Visual Consistency Agent.
+                </p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🎨</div>
+                <h3 class="feature-title">Storyboard Generation</h3>
+                <p class="feature-description">
+                    Automatically create professional storyboards with consistent 
+                    visual style for every scene.
+                </p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🎥</div>
+                <h3 class="feature-title">AI Video Creation</h3>
+                <p class="feature-description">
+                    Generate videos using Runway, Pika, Sora, and other leading 
+                    AI platforms with optimized prompts.
+                </p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🤖</div>
+                <h3 class="feature-title">Multi-Agent Orchestra</h3>
+                <p class="feature-description">
+                    Our Director Agent coordinates specialized agents to manage 
+                    your entire production pipeline.
+                </p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">💎</div>
+                <h3 class="feature-title">Quality Assurance</h3>
+                <p class="feature-description">
+                    Automatic validation ensures every frame meets professional 
+                    standards before delivery.
+                </p>
+            </div>
+        </div>
+        
+        <div class="workflow">
+            <h2 style="text-align: center; margin-bottom: 40px;">Production Workflow</h2>
+            <div class="workflow-steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-title">Upload Script</div>
+                </div>
+                <div class="step-arrow">→</div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-title">Analyze</div>
+                </div>
+                <div class="step-arrow">→</div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-title">Design</div>
+                </div>
+                <div class="step-arrow">→</div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <div class="step-title">Generate</div>
+                </div>
+                <div class="step-arrow">→</div>
+                <div class="step">
+                    <div class="step-number">5</div>
+                    <div class="step-title">Deliver</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="cta-section">
+            <h2 style="margin-bottom: 30px;">Start Your AI Film Production</h2>
+            
+            <div class="upload-area" onclick="document.getElementById('fileInput').click()">
+                <div class="upload-icon">📄</div>
+                <h3>Drop Your Screenplay Here</h3>
+                <p style="margin-top: 15px; opacity: 0.8;">
+                    Supports .txt, .pdf, .fountain formats
+                </p>
+            </div>
+            
+            <input type="file" id="fileInput" accept=".txt,.pdf,.fountain" onchange="handleFileUpload(event)">
+            
+            <div class="status-message" id="statusMessage"></div>
+            
+            <p style="margin-top: 40px; opacity: 0.8;">
+                Or try our demo with a sample script
+            </p>
+            <button class="btn" onclick="loadDemoScript()">Load Demo Script</button>
+        </div>
+    </div>
+    
+    <script>
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const content = e.target.result;
+                uploadScript(content, file.name);
+            };
+            reader.readAsText(file);
+        }
+        
+        async function uploadScript(content, filename) {
+            const statusEl = document.getElementById('statusMessage');
+            statusEl.className = 'status-message';
+            statusEl.style.display = 'block';
+            statusEl.textContent = 'Analyzing screenplay...';
+            
+            try {
+                const response = await fetch('/api/upload_script', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        script: content,
+                        title: filename.replace(/\.[^/.]+$/, ''),
+                        author: 'User'
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    statusEl.className = 'status-message status-success';
+                    statusEl.textContent = 'Script analyzed successfully! Redirecting to dashboard...';
+                    
+                    setTimeout(() => {
+                        window.location.href = '/dashboard';
+                    }, 2000);
+                } else {
+                    throw new Error(data.error || 'Upload failed');
+                }
+            } catch (error) {
+                statusEl.className = 'status-message status-error';
+                statusEl.textContent = 'Error: ' + error.message;
+            }
+        }
+        
+        function loadDemoScript() {
+            const demoScript = `INT. COFFEE SHOP - DAY
+
+SARAH (28, tired eyes, worn leather jacket) sits alone at a corner table, 
+staring at her untouched coffee.
+
+SARAH
+(to herself)
+Just one more day...
+
+The BARISTA (22, friendly smile) approaches.
+
+BARISTA
+Everything okay with your coffee?
+
+SARAH
+(forcing a smile)
+It's perfect. Just like always.
+
+EXT. STREET - DAY
+
+Sarah walks through the busy street, lost in thought.
+
+INT. COFFEE SHOP - SUNSET
+
+Sarah returns to the same table. The coffee shop is nearly empty.
+
+SARAH
+(to the Barista)
+Do you ever wonder if this is all there is?
+
+BARISTA
+Every day. But then I remember - 
+it's not about the destination.
+It's about who we share the journey with.
+
+Sarah smiles - a real smile this time.
+
+FADE OUT.`;
+            
+            uploadScript(demoScript, 'Demo Script - The Last Coffee');
+        }
+    </script>
+</body>
+</html>

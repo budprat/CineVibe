@@ -1,0 +1,3 @@
+"""
+CineVibe Test Suite
+"""

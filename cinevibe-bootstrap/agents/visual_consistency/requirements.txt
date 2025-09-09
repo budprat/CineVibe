@@ -1,0 +1,6 @@
+google-cloud-adk==0.1.0
+google-cloud-spanner==3.49.1
+a2a-sdk>=0.2.6
+pydantic==2.10.6
+httpx==0.28.1
+uvicorn==0.34.0

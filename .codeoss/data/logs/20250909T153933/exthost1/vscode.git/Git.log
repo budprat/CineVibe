@@ -1,0 +1,148 @@
+2025-09-09 15:40:18.229 [info] [main] Log level: Info
+2025-09-09 15:40:18.229 [info] [main] Validating found git in: "git"
+2025-09-09 15:40:18.229 [info] [main] Using git "2.43.0" from "git"
+2025-09-09 15:40:18.229 [info] [Model][doInitialScan] Initial repository scan started
+2025-09-09 15:40:18.229 [info] > git rev-parse --show-toplevel [7ms]
+2025-09-09 15:40:18.229 [info] fatal: not a git repository (or any parent up to mount point /)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+2025-09-09 15:40:18.229 [info] > git rev-parse --show-toplevel [16ms]
+2025-09-09 15:40:18.229 [info] fatal: not a git repository (or any parent up to mount point /)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+2025-09-09 15:40:18.249 [info] > git rev-parse --show-toplevel [6ms]
+2025-09-09 15:40:18.249 [info] fatal: not a git repository (or any parent up to mount point /)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+2025-09-09 15:40:18.269 [info] > git rev-parse --show-toplevel [5ms]
+2025-09-09 15:40:18.269 [info] fatal: not a git repository (or any parent up to mount point /)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+2025-09-09 15:40:18.288 [info] > git rev-parse --show-toplevel [7ms]
+2025-09-09 15:40:18.288 [info] fatal: not a git repository (or any parent up to mount point /)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+2025-09-09 15:40:18.314 [info] > git rev-parse --show-toplevel [13ms]
+2025-09-09 15:40:18.314 [info] fatal: not a git repository (or any parent up to mount point /)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+2025-09-09 15:40:18.328 [info] > git rev-parse --show-toplevel [3ms]
+2025-09-09 15:40:18.328 [info] fatal: not a git repository (or any parent up to mount point /)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+2025-09-09 15:40:18.345 [info] > git rev-parse --show-toplevel [4ms]
+2025-09-09 15:40:18.345 [info] fatal: not a git repository (or any parent up to mount point /)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+2025-09-09 15:40:18.362 [info] > git rev-parse --show-toplevel [4ms]
+2025-09-09 15:40:18.362 [info] fatal: not a git repository (or any parent up to mount point /)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+2025-09-09 15:40:18.377 [info] > git rev-parse --show-toplevel [3ms]
+2025-09-09 15:40:18.377 [info] fatal: not a git repository (or any parent up to mount point /)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+2025-09-09 15:40:18.392 [info] > git rev-parse --show-toplevel [3ms]
+2025-09-09 15:40:18.392 [info] fatal: not a git repository (or any parent up to mount point /)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+2025-09-09 15:40:18.425 [info] > git rev-parse --show-toplevel [21ms]
+2025-09-09 15:40:18.442 [info] > git rev-parse --git-dir --git-common-dir [3ms]
+2025-09-09 15:40:18.459 [info] [Model][openRepository] Opened repository (path): /home/p_budhwar/a2a-inspector
+2025-09-09 15:40:18.459 [info] [Model][openRepository] Opened repository (real path): /home/p_budhwar/a2a-inspector
+2025-09-09 15:40:18.487 [info] > git rev-parse --show-toplevel [4ms]
+2025-09-09 15:40:18.488 [info] fatal: not a git repository (or any parent up to mount point /)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+2025-09-09 15:40:18.488 [info] > git config --get commit.template [15ms]
+2025-09-09 15:40:18.516 [info] > git rev-parse --show-toplevel [17ms]
+2025-09-09 15:40:18.531 [info] > git rev-parse --git-dir --git-common-dir [3ms]
+2025-09-09 15:40:18.539 [info] [Model][openRepository] Opened repository (path): /home/p_budhwar/instavibe-bootstrap
+2025-09-09 15:40:18.539 [info] [Model][openRepository] Opened repository (real path): /home/p_budhwar/instavibe-bootstrap
+2025-09-09 15:40:18.540 [info] [Model][doInitialScan] Initial repository scan completed - repositories (2), closed repositories (0), parent repositories (0), unsafe repositories (0)
+2025-09-09 15:40:18.556 [info] > git config --get commit.template [4ms]
+2025-09-09 15:40:18.683 [info] > git for-each-ref --format=%(refname)%00%(upstream:short)%00%(objectname)%00%(upstream:track)%00%(upstream:remotename)%00%(upstream:remoteref) refs/heads/main refs/remotes/main [172ms]
+2025-09-09 15:40:18.705 [warning] [Git][revParse] Unable to read file: ENOENT: no such file or directory, open '/home/p_budhwar/a2a-inspector/.git/refs/remotes/origin/main'
+2025-09-09 15:40:18.706 [info] > git for-each-ref --format=%(refname)%00%(upstream:short)%00%(objectname)%00%(upstream:track)%00%(upstream:remotename)%00%(upstream:remoteref) refs/heads/adk-1.2.1-a2a-0.2.7 refs/remotes/adk-1.2.1-a2a-0.2.7 [138ms]
+2025-09-09 15:40:18.721 [warning] [Git][revParse] Unable to read file: ENOENT: no such file or directory, open '/home/p_budhwar/instavibe-bootstrap/.git/refs/remotes/origin/adk-1.2.1-a2a-0.2.7'
+2025-09-09 15:40:18.724 [info] > git rev-parse refs/remotes/origin/main [19ms]
+2025-09-09 15:40:18.759 [info] > git rev-parse refs/remotes/origin/adk-1.2.1-a2a-0.2.7 [38ms]
+2025-09-09 15:40:18.788 [info] > git for-each-ref --sort -committerdate --format %(refname)%00%(objectname)%00%(*objectname) [37ms]
+2025-09-09 15:40:18.793 [info] > git for-each-ref --sort -committerdate --format %(refname)%00%(objectname)%00%(*objectname) [8ms]
+2025-09-09 15:40:18.806 [info] > git status -z -uall [70ms]
+2025-09-09 15:40:18.871 [info] > git for-each-ref --format=%(refname)%00%(upstream:short)%00%(objectname)%00%(upstream:track)%00%(upstream:remotename)%00%(upstream:remoteref) refs/heads/main refs/remotes/main [17ms]
+2025-09-09 15:40:18.890 [info] > git config --get commit.template [21ms]
+2025-09-09 15:40:18.892 [info] > git config --get --local branch.main.vscode-merge-base [9ms]
+2025-09-09 15:40:18.920 [info] > git for-each-ref --format=%(refname)%00%(upstream:short)%00%(objectname)%00%(upstream:track)%00%(upstream:remotename)%00%(upstream:remoteref) refs/heads/main refs/remotes/main [3ms]
+2025-09-09 15:40:18.921 [info] > git for-each-ref --format=%(refname)%00%(upstream:short)%00%(objectname)%00%(upstream:track)%00%(upstream:remotename)%00%(upstream:remoteref) refs/heads/origin/main refs/remotes/origin/main [17ms]
+2025-09-09 15:40:18.947 [warning] [Git][revParse] Unable to read file: ENOENT: no such file or directory, open '/home/p_budhwar/a2a-inspector/.git/refs/remotes/origin/main'
+2025-09-09 15:40:18.952 [info] > git rev-parse refs/remotes/origin/main [6ms]
+2025-09-09 15:40:18.975 [info] > git merge-base refs/heads/main refs/remotes/origin/main [41ms]
+2025-09-09 15:40:18.989 [info] > git status -z -uall [25ms]
+2025-09-09 15:40:18.990 [info] > git for-each-ref --sort -committerdate --format %(refname)%00%(objectname)%00%(*objectname) [15ms]
+2025-09-09 15:40:19.009 [info] > git status -z -uall [236ms]
+2025-09-09 15:40:19.010 [info] > git merge-base refs/heads/main refs/remotes/origin/main [5ms]
+2025-09-09 15:40:19.039 [info] > git diff --name-status -z --diff-filter=ADMR 78d9f9b5c41273789c06003bb4ebdb7378196593...refs/remotes/origin/main [51ms]
+2025-09-09 15:40:19.053 [info] > git for-each-ref --format=%(refname)%00%(upstream:short)%00%(objectname)%00%(upstream:track)%00%(upstream:remotename)%00%(upstream:remoteref) refs/heads/adk-1.2.1-a2a-0.2.7 refs/remotes/adk-1.2.1-a2a-0.2.7 [17ms]
+2025-09-09 15:40:19.065 [info] > git diff --name-status -z --diff-filter=ADMR 78d9f9b5c41273789c06003bb4ebdb7378196593...refs/remotes/origin/main [45ms]
+2025-09-09 15:40:19.068 [info] > git config --get --local branch.adk-1.2.1-a2a-0.2.7.vscode-merge-base [3ms]
+2025-09-09 15:40:19.080 [info] > git config --get commit.template [29ms]
+2025-09-09 15:40:19.094 [info] > git for-each-ref --format=%(refname)%00%(upstream:short)%00%(objectname)%00%(upstream:track)%00%(upstream:remotename)%00%(upstream:remoteref) refs/heads/origin/main refs/remotes/origin/main [15ms]
+2025-09-09 15:40:19.109 [info] > git for-each-ref --format=%(refname)%00%(upstream:short)%00%(objectname)%00%(upstream:track)%00%(upstream:remotename)%00%(upstream:remoteref) refs/heads/adk-1.2.1-a2a-0.2.7 refs/remotes/adk-1.2.1-a2a-0.2.7 [16ms]
+2025-09-09 15:40:19.110 [info] > git merge-base refs/heads/adk-1.2.1-a2a-0.2.7 refs/remotes/origin/adk-1.2.1-a2a-0.2.7 [5ms]
+2025-09-09 15:40:19.139 [warning] [Git][revParse] Unable to read file: ENOENT: no such file or directory, open '/home/p_budhwar/instavibe-bootstrap/.git/refs/remotes/origin/adk-1.2.1-a2a-0.2.7'
+2025-09-09 15:40:19.141 [info] > git diff --name-status -z --diff-filter=ADMR 5907507100ee6788c8a23276cfc547e06c5c6f78...refs/remotes/origin/adk-1.2.1-a2a-0.2.7 [19ms]
+2025-09-09 15:40:19.143 [info] > git rev-parse refs/remotes/origin/adk-1.2.1-a2a-0.2.7 [4ms]
+2025-09-09 15:40:19.169 [info] > git status -z -uall [15ms]
+2025-09-09 15:40:19.172 [info] > git for-each-ref --sort -committerdate --format %(refname)%00%(objectname)%00%(*objectname) [5ms]
+2025-09-09 15:40:19.933 [info] > git check-ignore -v -z --stdin [28ms]
+2025-09-09 15:40:19.934 [info] > git check-ignore -v -z --stdin [18ms]
+2025-09-09 15:40:20.498 [info] > git check-ignore -v -z --stdin [56ms]
+2025-09-09 15:40:20.499 [info] > git check-ignore -v -z --stdin [43ms]
+2025-09-09 15:41:59.170 [info] > git rev-parse --show-toplevel [1ms]
+2025-09-09 15:41:59.179 [info] > git rev-parse --git-dir --git-common-dir [2ms]
+2025-09-09 15:41:59.192 [info] [Model][openRepository] Opened repository (path): /home/p_budhwar
+2025-09-09 15:41:59.192 [info] [Model][openRepository] Opened repository (real path): /home/p_budhwar
+2025-09-09 15:41:59.201 [info] [Git][getRemotes] No remotes found in the git config file
+2025-09-09 15:41:59.210 [info] > git config --get commit.template [9ms]
+2025-09-09 15:41:59.211 [info] > git for-each-ref --format=%(refname)%00%(upstream:short)%00%(objectname)%00%(upstream:track)%00%(upstream:remotename)%00%(upstream:remoteref) refs/heads/master refs/remotes/master [2ms]
+2025-09-09 15:41:59.211 [warning] [Git][getBranch] No such branch: master
+2025-09-09 15:41:59.231 [info] > git for-each-ref --sort -committerdate --format %(refname)%00%(objectname)%00%(*objectname) [2ms]
+2025-09-09 15:41:59.322 [info] > git status -z -uall [103ms]
+2025-09-09 15:42:00.519 [info] > git for-each-ref --format=%(refname)%00%(upstream:short)%00%(objectname)%00%(upstream:track)%00%(upstream:remotename)%00%(upstream:remoteref) refs/heads/master refs/remotes/master [1031ms]
+2025-09-09 15:42:00.520 [warning] [Git][getBranch] No such branch: master
+2025-09-09 15:42:00.521 [error] [GitHistoryProvider][resolveHEADMergeBase] Failed to resolve merge base for master: Error: No such branch: master.
+2025-09-09 15:42:00.533 [info] > git config --get commit.template [28ms]
+2025-09-09 15:42:00.543 [info] [Git][getRemotes] No remotes found in the git config file
+2025-09-09 15:42:00.545 [info] > git for-each-ref --format=%(refname)%00%(upstream:short)%00%(objectname)%00%(upstream:track)%00%(upstream:remotename)%00%(upstream:remoteref) refs/heads/master refs/remotes/master [2ms]
+2025-09-09 15:42:00.546 [warning] [Git][getBranch] No such branch: master
+2025-09-09 15:42:00.565 [info] > git for-each-ref --sort -committerdate --format %(refname)%00%(objectname)%00%(*objectname) [2ms]
+2025-09-09 15:42:00.653 [info] > git status -z -uall [100ms]
+2025-09-09 15:42:01.649 [info] > git check-ignore -v -z --stdin [31ms]
+2025-09-09 15:42:01.650 [info] > git check-ignore -v -z --stdin [24ms]
+2025-09-09 15:42:01.651 [info] > git check-ignore -v -z --stdin [16ms]
+2025-09-09 15:43:34.673 [info] [Git][getRemotes] No remotes found in the git config file
+2025-09-09 15:43:34.674 [info] > git config --get commit.template [9ms]
+2025-09-09 15:43:34.675 [info] > git for-each-ref --format=%(refname)%00%(upstream:short)%00%(objectname)%00%(upstream:track)%00%(upstream:remotename)%00%(upstream:remoteref) refs/heads/master refs/remotes/master [2ms]
+2025-09-09 15:43:34.675 [warning] [Git][getBranch] No such branch: master
+2025-09-09 15:43:34.691 [info] > git for-each-ref --sort -committerdate --format %(refname)%00%(objectname)%00%(*objectname) [1ms]
+2025-09-09 15:43:34.787 [info] > git status -z -uall [104ms]
+2025-09-09 15:43:47.587 [info] [Git][getRemotes] No remotes found in the git config file
+2025-09-09 15:43:47.588 [info] > git config --get commit.template [8ms]
+2025-09-09 15:43:47.589 [info] > git for-each-ref --format=%(refname)%00%(upstream:short)%00%(objectname)%00%(upstream:track)%00%(upstream:remotename)%00%(upstream:remoteref) refs/heads/master refs/remotes/master [2ms]
+2025-09-09 15:43:47.589 [warning] [Git][getBranch] No such branch: master
+2025-09-09 15:43:47.604 [info] > git for-each-ref --sort -committerdate --format %(refname)%00%(objectname)%00%(*objectname) [2ms]
+2025-09-09 15:43:47.686 [info] > git status -z -uall [91ms]
+2025-09-09 15:44:02.172 [info] > git config --get commit.template [8ms]
+2025-09-09 15:44:02.172 [info] > git for-each-ref --format=%(refname)%00%(upstream:short)%00%(objectname)%00%(upstream:track)%00%(upstream:remotename)%00%(upstream:remoteref) refs/heads/master refs/remotes/master [1ms]
+2025-09-09 15:44:02.172 [warning] [Git][getBranch] No such branch: master
+2025-09-09 15:44:02.188 [info] > git for-each-ref --sort -committerdate --format %(refname)%00%(objectname)%00%(*objectname) [2ms]
+2025-09-09 15:44:02.273 [info] > git status -z -uall [94ms]
+2025-09-09 15:44:07.478 [info] > git config --get commit.template [8ms]
+2025-09-09 15:44:07.478 [info] > git for-each-ref --format=%(refname)%00%(upstream:short)%00%(objectname)%00%(upstream:track)%00%(upstream:remotename)%00%(upstream:remoteref) refs/heads/master refs/remotes/master [2ms]
+2025-09-09 15:44:07.478 [warning] [Git][getBranch] No such branch: master
+2025-09-09 15:44:07.494 [info] > git for-each-ref --sort -committerdate --format %(refname)%00%(objectname)%00%(*objectname) [2ms]
+2025-09-09 15:44:07.576 [info] > git status -z -uall [91ms]
+2025-09-09 15:44:16.089 [info] > git config --get commit.template [9ms]
+2025-09-09 15:44:16.090 [info] > git for-each-ref --format=%(refname)%00%(upstream:short)%00%(objectname)%00%(upstream:track)%00%(upstream:remotename)%00%(upstream:remoteref) refs/heads/master refs/remotes/master [2ms]
+2025-09-09 15:44:16.090 [warning] [Git][getBranch] No such branch: master
+2025-09-09 15:44:16.109 [info] > git for-each-ref --sort -committerdate --format %(refname)%00%(objectname)%00%(*objectname) [3ms]
+2025-09-09 15:44:16.191 [info] > git status -z -uall [93ms]
+2025-09-09 15:44:23.654 [info] > git config --get commit.template [8ms]
+2025-09-09 15:44:23.665 [info] > git for-each-ref --format=%(refname)%00%(upstream:short)%00%(objectname)%00%(upstream:track)%00%(upstream:remotename)%00%(upstream:remoteref) refs/heads/master refs/remotes/master [2ms]
+2025-09-09 15:44:23.665 [warning] [Git][getBranch] No such branch: master
+2025-09-09 15:44:23.689 [info] > git for-each-ref --sort -committerdate --format %(refname)%00%(objectname)%00%(*objectname) [0ms]
+2025-09-09 15:44:23.782 [info] > git status -z -uall [106ms]
+2025-09-09 15:44:28.866 [info] > git config --get commit.template [8ms]
+2025-09-09 15:44:28.867 [info] > git for-each-ref --format=%(refname)%00%(upstream:short)%00%(objectname)%00%(upstream:track)%00%(upstream:remotename)%00%(upstream:remoteref) refs/heads/master refs/remotes/master [2ms]
+2025-09-09 15:44:28.867 [warning] [Git][getBranch] No such branch: master
+2025-09-09 15:44:28.887 [info] > git for-each-ref --sort -committerdate --format %(refname)%00%(objectname)%00%(*objectname) [2ms]
+2025-09-09 15:44:28.976 [info] > git status -z -uall [102ms]

@@ -1,0 +1,87 @@
+2025-09-08 06:46:50.419 [info] [main] Log level: Info
+2025-09-08 06:46:50.419 [info] [main] Validating found git in: "git"
+2025-09-08 06:46:50.419 [info] [main] Using git "2.43.0" from "git"
+2025-09-08 06:46:50.419 [info] [Model][doInitialScan] Initial repository scan started
+2025-09-08 06:46:50.419 [info] > git rev-parse --show-toplevel [11ms]
+2025-09-08 06:46:50.419 [info] fatal: not a git repository (or any parent up to mount point /)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+2025-09-08 06:46:50.419 [info] > git rev-parse --show-toplevel [16ms]
+2025-09-08 06:46:50.419 [info] fatal: not a git repository (or any parent up to mount point /)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+2025-09-08 06:46:50.419 [info] > git rev-parse --show-toplevel [4ms]
+2025-09-08 06:46:50.419 [info] fatal: not a git repository (or any parent up to mount point /)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+2025-09-08 06:46:50.419 [info] > git rev-parse --show-toplevel [3ms]
+2025-09-08 06:46:50.419 [info] fatal: not a git repository (or any parent up to mount point /)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+2025-09-08 06:46:50.419 [info] > git rev-parse --show-toplevel [2ms]
+2025-09-08 06:46:50.419 [info] fatal: not a git repository (or any parent up to mount point /)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+2025-09-08 06:46:50.419 [info] > git rev-parse --show-toplevel [3ms]
+2025-09-08 06:46:50.419 [info] fatal: not a git repository (or any parent up to mount point /)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+2025-09-08 06:46:50.419 [info] > git rev-parse --show-toplevel [2ms]
+2025-09-08 06:46:50.419 [info] fatal: not a git repository (or any parent up to mount point /)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+2025-09-08 06:46:50.419 [info] > git rev-parse --show-toplevel [3ms]
+2025-09-08 06:46:50.419 [info] fatal: not a git repository (or any parent up to mount point /)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+2025-09-08 06:46:50.419 [info] > git rev-parse --show-toplevel [3ms]
+2025-09-08 06:46:50.419 [info] fatal: not a git repository (or any parent up to mount point /)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+2025-09-08 06:46:50.419 [info] > git rev-parse --show-toplevel [3ms]
+2025-09-08 06:46:50.419 [info] fatal: not a git repository (or any parent up to mount point /)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+2025-09-08 06:46:50.419 [info] > git rev-parse --show-toplevel [3ms]
+2025-09-08 06:46:50.419 [info] fatal: not a git repository (or any parent up to mount point /)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+2025-09-08 06:46:50.419 [info] > git rev-parse --show-toplevel [46ms]
+2025-09-08 06:46:50.419 [info] > git rev-parse --git-dir --git-common-dir [7ms]
+2025-09-08 06:46:50.419 [info] [Model][openRepository] Opened repository (path): /home/p_budhwar/a2a-inspector
+2025-09-08 06:46:50.419 [info] [Model][openRepository] Opened repository (real path): /home/p_budhwar/a2a-inspector
+2025-09-08 06:46:50.419 [info] > git rev-parse --show-toplevel [3ms]
+2025-09-08 06:46:50.419 [info] fatal: not a git repository (or any parent up to mount point /)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+2025-09-08 06:46:50.419 [info] > git config --get commit.template [8ms]
+2025-09-08 06:46:50.449 [info] > git rev-parse --show-toplevel [24ms]
+2025-09-08 06:46:50.455 [info] > git rev-parse --git-dir --git-common-dir [2ms]
+2025-09-08 06:46:50.461 [info] [Model][openRepository] Opened repository (path): /home/p_budhwar/instavibe-bootstrap
+2025-09-08 06:46:50.461 [info] [Model][openRepository] Opened repository (real path): /home/p_budhwar/instavibe-bootstrap
+2025-09-08 06:46:50.462 [info] [Model][doInitialScan] Initial repository scan completed - repositories (2), closed repositories (0), parent repositories (0), unsafe repositories (0)
+2025-09-08 06:46:50.475 [info] > git config --get commit.template [7ms]
+2025-09-08 06:46:50.508 [info] > git for-each-ref --format=%(refname)%00%(upstream:short)%00%(objectname)%00%(upstream:track)%00%(upstream:remotename)%00%(upstream:remoteref) refs/heads/main refs/remotes/main [79ms]
+2025-09-08 06:46:50.514 [warning] [Git][revParse] Unable to read file: ENOENT: no such file or directory, open '/home/p_budhwar/a2a-inspector/.git/refs/remotes/origin/main'
+2025-09-08 06:46:50.516 [info] > git rev-parse refs/remotes/origin/main [2ms]
+2025-09-08 06:46:50.536 [info] > git for-each-ref --format=%(refname)%00%(upstream:short)%00%(objectname)%00%(upstream:track)%00%(upstream:remotename)%00%(upstream:remoteref) refs/heads/adk-1.2.1-a2a-0.2.7 refs/remotes/adk-1.2.1-a2a-0.2.7 [62ms]
+2025-09-08 06:46:50.554 [warning] [Git][revParse] Unable to read file: ENOENT: no such file or directory, open '/home/p_budhwar/instavibe-bootstrap/.git/refs/remotes/origin/adk-1.2.1-a2a-0.2.7'
+2025-09-08 06:46:50.555 [info] > git for-each-ref --sort -committerdate --format %(refname)%00%(objectname)%00%(*objectname) [25ms]
+2025-09-08 06:46:50.558 [info] > git rev-parse refs/remotes/origin/adk-1.2.1-a2a-0.2.7 [4ms]
+2025-09-08 06:46:54.774 [info] > git status -z -uall [4251ms]
+2025-09-08 06:46:54.774 [info] > git status -z -uall [4211ms]
+2025-09-08 06:46:54.774 [info] > git check-ignore -v -z --stdin [3603ms]
+2025-09-08 06:46:54.780 [info] > git check-ignore -v -z --stdin [3602ms]
+2025-09-08 06:46:54.888 [info] > git for-each-ref --sort -committerdate --format %(refname)%00%(objectname)%00%(*objectname) [4320ms]
+2025-09-08 06:46:55.013 [info] > git for-each-ref --format=%(refname)%00%(upstream:short)%00%(objectname)%00%(upstream:track)%00%(upstream:remotename)%00%(upstream:remoteref) refs/heads/adk-1.2.1-a2a-0.2.7 refs/remotes/adk-1.2.1-a2a-0.2.7 [111ms]
+2025-09-08 06:46:55.047 [info] > git for-each-ref --format=%(refname)%00%(upstream:short)%00%(objectname)%00%(upstream:track)%00%(upstream:remotename)%00%(upstream:remoteref) refs/heads/main refs/remotes/main [163ms]
+2025-09-08 06:46:55.134 [info] > git config --get --local branch.main.vscode-merge-base [67ms]
+2025-09-08 06:46:55.151 [info] > git config --get --local branch.adk-1.2.1-a2a-0.2.7.vscode-merge-base [106ms]
+2025-09-08 06:46:55.170 [info] > git config --get commit.template [184ms]
+2025-09-08 06:46:55.170 [info] > git config --get commit.template [203ms]
+2025-09-08 06:46:55.468 [info] > git for-each-ref --format=%(refname)%00%(upstream:short)%00%(objectname)%00%(upstream:track)%00%(upstream:remotename)%00%(upstream:remoteref) refs/heads/origin/main refs/remotes/origin/main [300ms]
+2025-09-08 06:46:55.479 [info] > git for-each-ref --format=%(refname)%00%(upstream:short)%00%(objectname)%00%(upstream:track)%00%(upstream:remotename)%00%(upstream:remoteref) refs/heads/origin/main refs/remotes/origin/main [329ms]
+2025-09-08 06:46:55.530 [info] > git check-ignore -v -z --stdin [32ms]
+2025-09-08 06:46:55.531 [info] > git check-ignore -v -z --stdin [24ms]
+2025-09-08 06:46:55.533 [info] > git merge-base refs/heads/main refs/remotes/origin/main [44ms]
+2025-09-08 06:46:55.546 [info] > git merge-base refs/heads/adk-1.2.1-a2a-0.2.7 refs/remotes/origin/adk-1.2.1-a2a-0.2.7 [68ms]
+2025-09-08 06:46:55.564 [info] > git diff --name-status -z --diff-filter=ADMR 78d9f9b5c41273789c06003bb4ebdb7378196593...refs/remotes/origin/main [19ms]
+2025-09-08 06:46:55.565 [info] > git for-each-ref --format=%(refname)%00%(upstream:short)%00%(objectname)%00%(upstream:track)%00%(upstream:remotename)%00%(upstream:remoteref) refs/heads/adk-1.2.1-a2a-0.2.7 refs/remotes/adk-1.2.1-a2a-0.2.7 [38ms]
+2025-09-08 06:46:55.565 [info] > git for-each-ref --format=%(refname)%00%(upstream:short)%00%(objectname)%00%(upstream:track)%00%(upstream:remotename)%00%(upstream:remoteref) refs/heads/main refs/remotes/main [47ms]
+2025-09-08 06:46:55.575 [warning] [Git][revParse] Unable to read file: ENOENT: no such file or directory, open '/home/p_budhwar/instavibe-bootstrap/.git/refs/remotes/origin/adk-1.2.1-a2a-0.2.7'
+2025-09-08 06:46:55.585 [warning] [Git][revParse] Unable to read file: ENOENT: no such file or directory, open '/home/p_budhwar/a2a-inspector/.git/refs/remotes/origin/main'
+2025-09-08 06:46:55.593 [info] > git diff --name-status -z --diff-filter=ADMR 5907507100ee6788c8a23276cfc547e06c5c6f78...refs/remotes/origin/adk-1.2.1-a2a-0.2.7 [37ms]
+2025-09-08 06:46:55.595 [info] > git rev-parse refs/remotes/origin/main [10ms]
+2025-09-08 06:46:55.614 [info] > git rev-parse refs/remotes/origin/adk-1.2.1-a2a-0.2.7 [39ms]
+2025-09-08 06:46:55.637 [info] > git status -z -uall [33ms]
+2025-09-08 06:46:55.638 [info] > git for-each-ref --sort -committerdate --format %(refname)%00%(objectname)%00%(*objectname) [24ms]
+2025-09-08 06:46:55.644 [info] > git status -z -uall [22ms]
+2025-09-08 06:46:55.644 [info] > git for-each-ref --sort -committerdate --format %(refname)%00%(objectname)%00%(*objectname) [12ms]

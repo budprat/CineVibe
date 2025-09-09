@@ -1,0 +1,74 @@
+Starting background process...[INFO] 2025-08-20 10:41:20.166 AM -- Using InMemoryTaskStore
+[INFO] 2025-08-20 10:41:20.183 AM -- [CoreAgent] Agent Server started on http://localhost:34223
+[INFO] 2025-08-20 10:41:20.183 AM -- [CoreAgent] Agent Card: http://localhost:34223/.well-known/agent.json
+[INFO] 2025-08-20 10:41:20.183 AM -- [CoreAgent] Press Ctrl+C to stop the server
+[INFO] 2025-08-20 11:38:13.282 AM -- [CoderAgentExecutor] Executing for taskId: 0db13d93-d499-48cf-8e8f-12c56be5fe95, contextId: 7788c9ab-5726-4dfe-a48f-f385c1fb9a8d
+[INFO] 2025-08-20 11:38:13.282 AM -- [CoderAgentExecutor] userMessage: {"role":"user","parts":[{"kind":"text","text":"GOOGLE_MAPS_API_KEY=$(gcloud services api-keys get-key-string \"${GOOGLE_MAPS_KEY_ID}\" \\\n    --project=\"${PROJECT_ID}\" \\\n    --format=\"value(keyString)\")\nERROR: (gcloud.services.api-keys.get-key-string) Error parsing [key].\nThe [key] resource is not properly specified.\nFailed to find attribute [key]. The attribute can be set in the following ways: \n- provide the argument `key` on the command line\n"}],"metadata":{"coderAgent":{"kind":"agent-settings","workspacePath":"/home/p_budhwar"}},"messageId":"85126f99-dbc8-4178-82ca-568f2c86a0af","kind":"","contextId":"7788c9ab-5726-4dfe-a48f-f385c1fb9a8d"}
+[INFO] 2025-08-20 11:38:13.283 AM -- [CoderAgentExecutor] Socket close handler set up for task 0db13d93-d499-48cf-8e8f-12c56be5fe95.
+[INFO] 2025-08-20 11:38:13.283 AM -- [CoderAgentExecutor] Creating new task 0db13d93-d499-48cf-8e8f-12c56be5fe95.
+[INFO] 2025-08-20 11:38:13.284 AM -- [CoderAgentExecutor] Overriding workspace path to: /home/p_budhwar
+[ERROR] 2025-08-20 11:38:13.380 AM -- [Config] Unable to set GeneratorConfig. Please provide a GEMINI_API_KEY or set USE_CCPA.
+Agent execution failed for stream message 85126f99-dbc8-4178-82ca-568f2c86a0af: TypeError: Cannot read properties of undefined (reading 'authType')
+    at createContentGenerator (file:///google/devshell/editor/code-oss-for-cloud-shell/extensions/geminicodeassist/agent/agent.mjs:206664:15)
+    at GeminiClient.initialize (file:///google/devshell/editor/code-oss-for-cloud-shell/extensions/geminicodeassist/agent/agent.mjs:228398:35)
+    at CoderAgentExecutor.createTask (file:///google/devshell/editor/code-oss-for-cloud-shell/extensions/geminicodeassist/agent/agent.mjs:252475:36)
+    at async CoderAgentExecutor.execute (file:///google/devshell/editor/code-oss-for-cloud-shell/extensions/geminicodeassist/agent/agent.mjs:252642:17)
+[INFO] 2025-08-20 11:38:13.385 AM -- [EventBus event]: 
+{
+  "kind": "status-update",
+  "taskId": "c3f154fe-741d-44ef-be3d-bfac4adf9f73",
+  "contextId": "7788c9ab-5726-4dfe-a48f-f385c1fb9a8d",
+  "status": {
+    "state": "failed",
+    "message": {
+      "kind": "message",
+      "role": "agent",
+      "messageId": "538f6c7b-901f-43ca-9c90-925047b5427c",
+      "parts": [
+        {
+          "kind": "text",
+          "text": "Agent execution error: Cannot read properties of undefined (reading 'authType')"
+        }
+      ],
+      "contextId": "7788c9ab-5726-4dfe-a48f-f385c1fb9a8d"
+    },
+    "timestamp": "2025-08-20T11:38:13.385Z"
+  },
+  "final": true
+}
+ResultManager: Received status update for unknown task c3f154fe-741d-44ef-be3d-bfac4adf9f73
+[INFO] 2025-08-20 11:38:32.229 AM -- [CoderAgentExecutor] Executing for taskId: 526e19e2-c805-4c66-a3aa-363187079238, contextId: edc8df51-5b81-418f-b211-a0779ddad8fa
+[INFO] 2025-08-20 11:38:32.229 AM -- [CoderAgentExecutor] userMessage: {"role":"user","parts":[{"kind":"text","text":"GOOGLE_MAPS_API_KEY=$(gcloud services api-keys get-key-string \"${GOOGLE_MAPS_KEY_ID}\" \\\n    --project=\"${PROJECT_ID}\" \\\n    --format=\"value(keyString)\")\nERROR: (gcloud.services.api-keys.get-key-string) Error parsing [key].\nThe [key] resource is not properly specified.\nFailed to find attribute [key]. The attribute can be set in the following ways: \n- provide the argument `key` on the command line\n"}],"metadata":{"coderAgent":{"kind":"agent-settings","workspacePath":"/home/p_budhwar"}},"messageId":"0874be84-e108-4e3f-832c-aeb1fc28b883","kind":"","contextId":"edc8df51-5b81-418f-b211-a0779ddad8fa"}
+[INFO] 2025-08-20 11:38:32.230 AM -- [CoderAgentExecutor] Socket close handler set up for task 526e19e2-c805-4c66-a3aa-363187079238.
+[INFO] 2025-08-20 11:38:32.230 AM -- [CoderAgentExecutor] Creating new task 526e19e2-c805-4c66-a3aa-363187079238.
+[INFO] 2025-08-20 11:38:32.230 AM -- [CoderAgentExecutor] Overriding workspace path to: /home/p_budhwar
+[ERROR] 2025-08-20 11:38:32.265 AM -- [Config] Unable to set GeneratorConfig. Please provide a GEMINI_API_KEY or set USE_CCPA.
+Agent execution failed for stream message 0874be84-e108-4e3f-832c-aeb1fc28b883: TypeError: Cannot read properties of undefined (reading 'authType')
+    at createContentGenerator (file:///google/devshell/editor/code-oss-for-cloud-shell/extensions/geminicodeassist/agent/agent.mjs:206664:15)
+    at GeminiClient.initialize (file:///google/devshell/editor/code-oss-for-cloud-shell/extensions/geminicodeassist/agent/agent.mjs:228398:35)
+    at CoderAgentExecutor.createTask (file:///google/devshell/editor/code-oss-for-cloud-shell/extensions/geminicodeassist/agent/agent.mjs:252475:36)
+    at async CoderAgentExecutor.execute (file:///google/devshell/editor/code-oss-for-cloud-shell/extensions/geminicodeassist/agent/agent.mjs:252642:17)
+[INFO] 2025-08-20 11:38:32.266 AM -- [EventBus event]: 
+{
+  "kind": "status-update",
+  "taskId": "4823131b-b76d-4e9a-b138-a9c059c5310e",
+  "contextId": "edc8df51-5b81-418f-b211-a0779ddad8fa",
+  "status": {
+    "state": "failed",
+    "message": {
+      "kind": "message",
+      "role": "agent",
+      "messageId": "4d907d8d-7775-4847-8792-03eae76855b1",
+      "parts": [
+        {
+          "kind": "text",
+          "text": "Agent execution error: Cannot read properties of undefined (reading 'authType')"
+        }
+      ],
+      "contextId": "edc8df51-5b81-418f-b211-a0779ddad8fa"
+    },
+    "timestamp": "2025-08-20T11:38:32.266Z"
+  },
+  "final": true
+}
+ResultManager: Received status update for unknown task 4823131b-b76d-4e9a-b138-a9c059c5310e

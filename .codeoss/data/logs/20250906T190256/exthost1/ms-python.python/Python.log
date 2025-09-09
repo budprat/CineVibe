@@ -1,0 +1,32 @@
+2025-09-06 19:14:33.321 [warning] Dir "/home/p_budhwar/.pixi/envs" is not watchable (directory does not exist)
+2025-09-06 19:14:33.321 [info] Starting Environment refresh
+2025-09-06 19:14:33.321 [info] Searching for interpreters in posix paths locator
+2025-09-06 19:14:33.321 [info] Searching for pyenv environments
+2025-09-06 19:14:33.321 [info] Searching for conda environments
+2025-09-06 19:14:33.321 [info] Searching for global virtual environments
+2025-09-06 19:14:33.321 [info] Searching for custom virtual environments
+2025-09-06 19:14:33.321 [info] pyenv is not installed
+2025-09-06 19:14:33.321 [info] Finished searching for pyenv environments: 20 milliseconds
+2025-09-06 19:14:33.321 [info] Finished searching for custom virtual envs: 18 milliseconds
+2025-09-06 19:14:33.321 [info] > conda info --json
+2025-09-06 19:14:33.321 [info] > hatch env show --json
+2025-09-06 19:14:33.321 [info] cwd: .
+2025-09-06 19:14:33.321 [info] > pyenv which python
+2025-09-06 19:14:33.321 [info] cwd: .
+2025-09-06 19:14:33.321 [info] Finished searching for global virtual envs: 47 milliseconds
+2025-09-06 19:14:33.321 [info] Found: /bin/python --> /bin/python3.12
+2025-09-06 19:14:33.326 [info] Found: /bin/python3 --> /bin/python3.12
+2025-09-06 19:14:33.327 [info] Found: /bin/python3.12 --> /bin/python3.12
+2025-09-06 19:14:33.338 [info] Found: /usr/bin/python --> /usr/bin/python3.12
+2025-09-06 19:14:33.338 [info] Found: /usr/bin/python3 --> /usr/bin/python3.12
+2025-09-06 19:14:33.338 [info] Found: /usr/bin/python3.12 --> /usr/bin/python3.12
+2025-09-06 19:14:33.376 [info] Finished searching for interpreters in posix paths locator: 114 milliseconds
+2025-09-06 19:14:33.377 [info] > /bin/python -I /google/devshell/editor/code-oss-for-cloud-shell/extensions/ms-python.python/python_files/get_output_via_markers.py /google/devshell/editor/code-oss-for-cloud-shell/extensions/ms-python.python/python_files/interpreterInfo.py
+2025-09-06 19:14:33.391 [info] > /usr/bin/python -I /google/devshell/editor/code-oss-for-cloud-shell/extensions/ms-python.python/python_files/get_output_via_markers.py /google/devshell/editor/code-oss-for-cloud-shell/extensions/ms-python.python/python_files/interpreterInfo.py
+2025-09-06 19:14:33.391 [info] Environments refresh paths discovered (event): 135 milliseconds
+2025-09-06 19:14:33.391 [info] Environments refresh paths discovered: 135 milliseconds
+2025-09-06 19:14:33.443 [info] Environments refresh finished (event): 187 milliseconds
+2025-09-06 19:14:33.454 [info] Environment refresh took 198 milliseconds
+2025-09-06 19:14:33.459 [info] Python interpreter path: /bin/python
+2025-09-06 19:14:36.048 [info] Starting Jedi language server for p_budhwar.
+2025-09-06 20:41:56.755 [info] Discover tests for workspace name: p_budhwar - uri: /home/p_budhwar/cinevibe-bootstrap/pyproject.toml

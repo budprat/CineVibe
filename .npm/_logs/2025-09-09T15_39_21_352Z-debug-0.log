@@ -1,0 +1,134 @@
+0 verbose cli /usr/local/nvm/versions/node/v22.19.0/bin/node /usr/local/nvm/versions/node/v22.19.0/bin/npm
+1 info using npm@11.5.2
+2 info using node@v22.19.0
+3 silly config load:file:/usr/local/nvm/versions/node/v22.19.0/lib/node_modules/npm/npmrc
+4 silly config load:file:/home/p_budhwar/.npmrc
+5 silly config load:file:/usr/local/nvm/versions/node/v22.19.0/etc/npmrc
+6 verbose title npm install @anthropic-ai/claude-code
+7 verbose argv "install" "--global" "@anthropic-ai/claude-code"
+8 verbose logfile logs-max:10 dir:/home/p_budhwar/.npm/_logs/2025-09-09T15_39_21_352Z-
+9 verbose logfile /home/p_budhwar/.npm/_logs/2025-09-09T15_39_21_352Z-debug-0.log
+10 silly packumentCache heap:2197815296 maxSize:549453824 maxEntrySize:274726912
+11 silly logfile start cleaning logs, removing 2 files
+12 silly logfile done cleaning log files
+13 silly idealTree buildDeps
+14 silly fetch manifest @anthropic-ai/claude-code@*
+15 silly packumentCache full:https://registry.npmjs.org/@anthropic-ai%2fclaude-code cache-miss
+16 http fetch GET 200 https://registry.npmjs.org/@anthropic-ai%2fclaude-code 293ms (cache updated)
+17 silly packumentCache full:https://registry.npmjs.org/@anthropic-ai%2fclaude-code set size:undefined disposed:false
+18 silly placeDep ROOT @anthropic-ai/claude-code@1.0.109 OK for:  want: *
+19 silly fetch manifest @img/sharp-linux-arm@^0.33.5
+20 silly packumentCache full:https://registry.npmjs.org/@img%2fsharp-linux-arm cache-miss
+21 silly fetch manifest @img/sharp-linux-x64@^0.33.5
+22 silly packumentCache full:https://registry.npmjs.org/@img%2fsharp-linux-x64 cache-miss
+23 http fetch GET 200 https://registry.npmjs.org/@img%2fsharp-linux-arm 64ms (cache revalidated)
+24 silly packumentCache full:https://registry.npmjs.org/@img%2fsharp-linux-arm set size:52646 disposed:false
+25 silly fetch manifest @img/sharp-win32-x64@^0.33.5
+26 silly packumentCache full:https://registry.npmjs.org/@img%2fsharp-win32-x64 cache-miss
+27 http fetch GET 200 https://registry.npmjs.org/@img%2fsharp-linux-x64 92ms (cache revalidated)
+28 silly packumentCache full:https://registry.npmjs.org/@img%2fsharp-linux-x64 set size:52371 disposed:false
+29 silly fetch manifest @img/sharp-darwin-x64@^0.33.5
+30 silly packumentCache full:https://registry.npmjs.org/@img%2fsharp-darwin-x64 cache-miss
+31 http fetch GET 200 https://registry.npmjs.org/@img%2fsharp-win32-x64 60ms (cache revalidated)
+32 silly packumentCache full:https://registry.npmjs.org/@img%2fsharp-win32-x64 set size:55114 disposed:false
+33 silly fetch manifest @img/sharp-linux-arm64@^0.33.5
+34 silly packumentCache full:https://registry.npmjs.org/@img%2fsharp-linux-arm64 cache-miss
+35 http fetch GET 200 https://registry.npmjs.org/@img%2fsharp-darwin-x64 72ms (cache revalidated)
+36 silly packumentCache full:https://registry.npmjs.org/@img%2fsharp-darwin-x64 set size:51571 disposed:false
+37 silly fetch manifest @img/sharp-darwin-arm64@^0.33.5
+38 silly packumentCache full:https://registry.npmjs.org/@img%2fsharp-darwin-arm64 cache-miss
+39 http fetch GET 200 https://registry.npmjs.org/@img%2fsharp-linux-arm64 82ms (cache revalidated)
+40 silly packumentCache full:https://registry.npmjs.org/@img%2fsharp-linux-arm64 set size:53085 disposed:false
+41 http fetch GET 200 https://registry.npmjs.org/@img%2fsharp-darwin-arm64 98ms (cache revalidated)
+42 silly packumentCache full:https://registry.npmjs.org/@img%2fsharp-darwin-arm64 set size:52294 disposed:false
+43 silly placeDep node_modules/@anthropic-ai/claude-code @img/sharp-darwin-arm64@0.33.5 OK for: @anthropic-ai/claude-code@1.0.109 want: ^0.33.5
+44 silly placeDep node_modules/@anthropic-ai/claude-code @img/sharp-darwin-x64@0.33.5 OK for: @anthropic-ai/claude-code@1.0.109 want: ^0.33.5
+45 silly placeDep node_modules/@anthropic-ai/claude-code @img/sharp-linux-arm@0.33.5 OK for: @anthropic-ai/claude-code@1.0.109 want: ^0.33.5
+46 silly placeDep node_modules/@anthropic-ai/claude-code @img/sharp-linux-arm64@0.33.5 OK for: @anthropic-ai/claude-code@1.0.109 want: ^0.33.5
+47 silly placeDep node_modules/@anthropic-ai/claude-code @img/sharp-linux-x64@0.33.5 OK for: @anthropic-ai/claude-code@1.0.109 want: ^0.33.5
+48 silly placeDep node_modules/@anthropic-ai/claude-code @img/sharp-win32-x64@0.33.5 OK for: @anthropic-ai/claude-code@1.0.109 want: ^0.33.5
+49 silly fetch manifest @img/sharp-libvips-darwin-arm64@1.0.4
+50 silly packumentCache full:https://registry.npmjs.org/@img%2fsharp-libvips-darwin-arm64 cache-miss
+51 silly fetch manifest @img/sharp-libvips-darwin-x64@1.0.4
+52 silly packumentCache full:https://registry.npmjs.org/@img%2fsharp-libvips-darwin-x64 cache-miss
+53 http fetch GET 200 https://registry.npmjs.org/@img%2fsharp-libvips-darwin-arm64 64ms (cache revalidated)
+54 silly packumentCache full:https://registry.npmjs.org/@img%2fsharp-libvips-darwin-arm64 set size:38106 disposed:false
+55 silly fetch manifest @img/sharp-libvips-linux-arm@1.0.5
+56 silly packumentCache full:https://registry.npmjs.org/@img%2fsharp-libvips-linux-arm cache-miss
+57 http fetch GET 200 https://registry.npmjs.org/@img%2fsharp-libvips-darwin-x64 89ms (cache revalidated)
+58 silly packumentCache full:https://registry.npmjs.org/@img%2fsharp-libvips-darwin-x64 set size:37671 disposed:false
+59 silly fetch manifest @img/sharp-libvips-linux-arm64@1.0.4
+60 silly packumentCache full:https://registry.npmjs.org/@img%2fsharp-libvips-linux-arm64 cache-miss
+61 http fetch GET 200 https://registry.npmjs.org/@img%2fsharp-libvips-linux-arm 62ms (cache revalidated)
+62 silly packumentCache full:https://registry.npmjs.org/@img%2fsharp-libvips-linux-arm set size:44014 disposed:false
+63 silly fetch manifest @img/sharp-libvips-linux-x64@1.0.4
+64 silly packumentCache full:https://registry.npmjs.org/@img%2fsharp-libvips-linux-x64 cache-miss
+65 http fetch GET 200 https://registry.npmjs.org/@img%2fsharp-libvips-linux-arm64 71ms (cache revalidated)
+66 silly packumentCache full:https://registry.npmjs.org/@img%2fsharp-libvips-linux-arm64 set size:40766 disposed:false
+67 http fetch GET 200 https://registry.npmjs.org/@img%2fsharp-libvips-linux-x64 86ms (cache revalidated)
+68 silly packumentCache full:https://registry.npmjs.org/@img%2fsharp-libvips-linux-x64 set size:42118 disposed:false
+69 silly placeDep node_modules/@anthropic-ai/claude-code @img/sharp-libvips-darwin-arm64@1.0.4 OK for: @img/sharp-darwin-arm64@0.33.5 want: 1.0.4
+70 silly placeDep node_modules/@anthropic-ai/claude-code @img/sharp-libvips-darwin-x64@1.0.4 OK for: @img/sharp-darwin-x64@0.33.5 want: 1.0.4
+71 silly placeDep node_modules/@anthropic-ai/claude-code @img/sharp-libvips-linux-arm@1.0.5 OK for: @img/sharp-linux-arm@0.33.5 want: 1.0.5
+72 silly placeDep node_modules/@anthropic-ai/claude-code @img/sharp-libvips-linux-arm64@1.0.4 OK for: @img/sharp-linux-arm64@0.33.5 want: 1.0.4
+73 silly placeDep node_modules/@anthropic-ai/claude-code @img/sharp-libvips-linux-x64@1.0.4 OK for: @img/sharp-linux-x64@0.33.5 want: 1.0.4
+74 silly reify moves {}
+75 verbose reify failed optional dependency /usr/local/nvm/versions/node/v22.19.0/lib/node_modules/@anthropic-ai/claude-code/node_modules/@img/sharp-libvips-linux-arm64
+76 silly reify mark deleted [
+76 silly reify   '/usr/local/nvm/versions/node/v22.19.0/lib/node_modules/@anthropic-ai/claude-code/node_modules/@img/sharp-libvips-linux-arm64'
+76 silly reify ]
+77 verbose reify failed optional dependency /usr/local/nvm/versions/node/v22.19.0/lib/node_modules/@anthropic-ai/claude-code/node_modules/@img/sharp-libvips-linux-arm
+78 silly reify mark deleted [
+78 silly reify   '/usr/local/nvm/versions/node/v22.19.0/lib/node_modules/@anthropic-ai/claude-code/node_modules/@img/sharp-libvips-linux-arm'
+78 silly reify ]
+79 verbose reify failed optional dependency /usr/local/nvm/versions/node/v22.19.0/lib/node_modules/@anthropic-ai/claude-code/node_modules/@img/sharp-libvips-darwin-x64
+80 silly reify mark deleted [
+80 silly reify   '/usr/local/nvm/versions/node/v22.19.0/lib/node_modules/@anthropic-ai/claude-code/node_modules/@img/sharp-libvips-darwin-x64'
+80 silly reify ]
+81 verbose reify failed optional dependency /usr/local/nvm/versions/node/v22.19.0/lib/node_modules/@anthropic-ai/claude-code/node_modules/@img/sharp-libvips-darwin-arm64
+82 silly reify mark deleted [
+82 silly reify   '/usr/local/nvm/versions/node/v22.19.0/lib/node_modules/@anthropic-ai/claude-code/node_modules/@img/sharp-libvips-darwin-arm64'
+82 silly reify ]
+83 verbose reify failed optional dependency /usr/local/nvm/versions/node/v22.19.0/lib/node_modules/@anthropic-ai/claude-code/node_modules/@img/sharp-win32-x64
+84 silly reify mark deleted [
+84 silly reify   '/usr/local/nvm/versions/node/v22.19.0/lib/node_modules/@anthropic-ai/claude-code/node_modules/@img/sharp-win32-x64'
+84 silly reify ]
+85 verbose reify failed optional dependency /usr/local/nvm/versions/node/v22.19.0/lib/node_modules/@anthropic-ai/claude-code/node_modules/@img/sharp-linux-arm64
+86 silly reify mark deleted [
+86 silly reify   '/usr/local/nvm/versions/node/v22.19.0/lib/node_modules/@anthropic-ai/claude-code/node_modules/@img/sharp-linux-arm64'
+86 silly reify ]
+87 verbose reify failed optional dependency /usr/local/nvm/versions/node/v22.19.0/lib/node_modules/@anthropic-ai/claude-code/node_modules/@img/sharp-linux-arm
+88 silly reify mark deleted [
+88 silly reify   '/usr/local/nvm/versions/node/v22.19.0/lib/node_modules/@anthropic-ai/claude-code/node_modules/@img/sharp-linux-arm'
+88 silly reify ]
+89 verbose reify failed optional dependency /usr/local/nvm/versions/node/v22.19.0/lib/node_modules/@anthropic-ai/claude-code/node_modules/@img/sharp-darwin-x64
+90 silly reify mark deleted [
+90 silly reify   '/usr/local/nvm/versions/node/v22.19.0/lib/node_modules/@anthropic-ai/claude-code/node_modules/@img/sharp-darwin-x64'
+90 silly reify ]
+91 verbose reify failed optional dependency /usr/local/nvm/versions/node/v22.19.0/lib/node_modules/@anthropic-ai/claude-code/node_modules/@img/sharp-darwin-arm64
+92 silly reify mark deleted [
+92 silly reify   '/usr/local/nvm/versions/node/v22.19.0/lib/node_modules/@anthropic-ai/claude-code/node_modules/@img/sharp-darwin-arm64'
+92 silly reify ]
+93 http cache @anthropic-ai/claude-code@https://registry.npmjs.org/@anthropic-ai/claude-code/-/claude-code-1.0.109.tgz 0ms (cache hit)
+94 http cache @img/sharp-libvips-linux-x64@https://registry.npmjs.org/@img/sharp-libvips-linux-x64/-/sharp-libvips-linux-x64-1.0.4.tgz 1ms (cache hit)
+95 http cache @img/sharp-linux-x64@https://registry.npmjs.org/@img/sharp-linux-x64/-/sharp-linux-x64-0.33.5.tgz 0ms (cache hit)
+96 silly tarball no local data for @anthropic-ai/claude-code@https://registry.npmjs.org/@anthropic-ai/claude-code/-/claude-code-1.0.109.tgz. Extracting by manifest.
+97 http fetch GET 200 https://registry.npmjs.org/@anthropic-ai/claude-code/-/claude-code-1.0.109.tgz 1852ms (cache miss)
+98 silly ADD node_modules/@anthropic-ai/claude-code
+99 silly ADD node_modules/@anthropic-ai/claude-code/node_modules/@img/sharp-libvips-linux-x64
+100 silly ADD node_modules/@anthropic-ai/claude-code/node_modules/@img/sharp-libvips-linux-arm64
+101 silly ADD node_modules/@anthropic-ai/claude-code/node_modules/@img/sharp-libvips-linux-arm
+102 silly ADD node_modules/@anthropic-ai/claude-code/node_modules/@img/sharp-libvips-darwin-x64
+103 silly ADD node_modules/@anthropic-ai/claude-code/node_modules/@img/sharp-libvips-darwin-arm64
+104 silly ADD node_modules/@anthropic-ai/claude-code/node_modules/@img/sharp-win32-x64
+105 silly ADD node_modules/@anthropic-ai/claude-code/node_modules/@img/sharp-linux-x64
+106 silly ADD node_modules/@anthropic-ai/claude-code/node_modules/@img/sharp-linux-arm64
+107 silly ADD node_modules/@anthropic-ai/claude-code/node_modules/@img/sharp-linux-arm
+108 silly ADD node_modules/@anthropic-ai/claude-code/node_modules/@img/sharp-darwin-x64
+109 silly ADD node_modules/@anthropic-ai/claude-code/node_modules/@img/sharp-darwin-arm64
+110 verbose cwd /home/p_budhwar
+111 verbose os Linux 6.6.97+
+112 verbose node v22.19.0
+113 verbose npm  v11.5.2
+114 verbose exit 0
+115 info ok

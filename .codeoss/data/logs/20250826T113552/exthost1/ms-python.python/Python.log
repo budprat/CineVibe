@@ -1,0 +1,7 @@
+2025-08-26 11:36:12.757 [warning] Dir "/home/p_budhwar/.pixi/envs" is not watchable (directory does not exist)
+2025-08-26 11:36:12.757 [info] Python interpreter path: /bin/python
+2025-08-26 11:36:12.866 [info] > pyenv which python
+2025-08-26 11:36:12.866 [info] cwd: .
+2025-08-26 11:36:19.413 [info] Starting Jedi language server for p_budhwar.
+2025-08-26 11:41:23.753 [info] Discover tests for workspace name: p_budhwar - uri: /home/p_budhwar
+2025-08-26 11:41:46.446 [info] Discover tests for workspace name: undefined - uri: /User/settings.json

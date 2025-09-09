@@ -1,0 +1,133 @@
+[project]
+name = "cinevibe-bootstrap"
+version = "0.1.0"
+description = "AI-powered film production system using Google ADK, A2A, and MCP"
+readme = "README.md"
+requires-python = ">=3.12"
+authors = [
+    {name = "CineVibe Team", email = "team@cinevibe.ai"}
+]
+keywords = ["ai", "film", "production", "multi-agent", "adk", "a2a", "mcp"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Programming Language :: Python :: 3.12",
+]
+
+dependencies = [
+    "google-cloud-adk>=0.1.0",
+    "google-cloud-spanner>=3.49.1",
+    "google-cloud-spanner-admin-database-v1>=3.49.1",
+    "google-cloud-aiplatform>=1.73.0",
+    "google-cloud-logging>=3.11.3",
+    "a2a-sdk>=0.2.6",
+    "Flask>=3.1.0",
+    "Flask-Cors>=5.0.0",
+    "httpx>=0.28.1",
+    "httpx-sse>=0.4.0",
+    "pydantic>=2.10.6",
+    "uvicorn>=0.34.0",
+    "fastapi>=0.115.6",
+    "python-socketio>=5.12.1",
+    "jinja2>=3.1.5",
+    "sse-starlette>=2.2.1",
+    "starlette>=0.46.1",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.23.0",
+    "pytest-cov>=5.0.0",
+    "black>=24.0.0",
+    "ruff>=0.5.0",
+    "mypy>=1.10.0",
+    "nox>=2024.0.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/cinevibe/cinevibe-bootstrap"
+Documentation = "https://docs.cinevibe.ai"
+Repository = "https://github.com/cinevibe/cinevibe-bootstrap"
+Issues = "https://github.com/cinevibe/cinevibe-bootstrap/issues"
+
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["agents", "tools", "cinevibe", "utils"]
+
+[tool.black]
+line-length = 100
+target-version = ['py312']
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+  env
+  | venv
+  | build
+  | dist
+)/
+'''
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+select = [
+    "E",  # pycodestyle errors
+    "W",  # pycodestyle warnings
+    "F",  # pyflakes
+    "I",  # isort
+    "B",  # flake8-bugbear
+    "C4", # flake8-comprehensions
+    "UP", # pyupgrade
+]
+ignore = [
+    "E501",  # line too long
+    "B008",  # do not perform function calls in argument defaults
+    "C901",  # too complex
+]
+
+[tool.mypy]
+python_version = "3.12"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+ignore_missing_imports = true
+exclude = [
+    "env/",
+    "venv/",
+    "build/",
+    "dist/",
+]
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+addopts = "-ra -q --strict-markers"
+testpaths = ["tests"]
+python_files = ["test_*.py", "*_test.py"]
+
+[tool.coverage.run]
+source = ["agents", "tools", "cinevibe"]
+omit = ["*/tests/*", "*/test_*.py", "*/__pycache__/*"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if self.debug:",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+]
+
+[tool.uv]
+dev-dependencies = [
+    "ipython>=8.0.0",
+    "jupyter>=1.0.0",
+]
+
+[tool.uv.workspace]
+members = ["agents/*"]

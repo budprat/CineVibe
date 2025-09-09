@@ -1,0 +1,42 @@
+2025-08-26 11:36:10.228 [info] Extension host with pid 1355 started
+2025-08-26 11:36:10.228 [error] Error: EEXIST: file already exists, open '/home/p_budhwar/.codeoss/data/User/workspaceStorage/7a836eab/vscode.lock'
+2025-08-26 11:36:10.229 [info] Lock '/home/p_budhwar/.codeoss/data/User/workspaceStorage/7a836eab/vscode.lock': Could not acquire lock, checking if the file is stale.
+2025-08-26 11:36:10.236 [info] Lock '/home/p_budhwar/.codeoss/data/User/workspaceStorage/7a836eab/vscode.lock': The pid 1250 appears to be gone.
+2025-08-26 11:36:10.236 [info] Lock '/home/p_budhwar/.codeoss/data/User/workspaceStorage/7a836eab/vscode.lock': Deleting a stale lock.
+2025-08-26 11:36:10.246 [info] Lock '/home/p_budhwar/.codeoss/data/User/workspaceStorage/7a836eab/vscode.lock': Lock acquired.
+2025-08-26 11:36:11.056 [info] ExtensionService#_doActivateExtension vscode.emmet, startup: false, activationEvent: 'onLanguage'
+2025-08-26 11:36:11.057 [info] ExtensionService#_doActivateExtension ms-python.python, startup: false, activationEvent: 'onLanguage:python'
+2025-08-26 11:36:11.058 [info] ExtensionService#_doActivateExtension google.cloud-shell, startup: false, activationEvent: 'onTerminalProfile:cloudshell.default'
+2025-08-26 11:36:11.833 [error] Error: spawn /google/devshell/editor/code-oss-for-cloud-shell/extensions/ms-python.python/python-env-tools/bin/pet ENOENT
+	at ChildProcess._handle.onexit (node:internal/child_process:285:19)
+	at onErrorNT (node:internal/child_process:483:16)
+	at process.processTicksAndRejections (node:internal/process/task_queues:82:21)
+2025-08-26 11:36:12.059 [info] ExtensionService#_doActivateExtension vscode.git-base, startup: true, activationEvent: '*', root cause: vscode.git
+2025-08-26 11:36:12.460 [info] ExtensionService#_doActivateExtension vscode.configuration-editing, startup: false, activationEvent: 'onLanguage:jsonc'
+2025-08-26 11:36:12.461 [info] ExtensionService#_doActivateExtension vscode.json-language-features, startup: false, activationEvent: 'onLanguage:jsonc'
+2025-08-26 11:36:12.461 [info] ExtensionService#_doActivateExtension vscode.typescript-language-features, startup: false, activationEvent: 'onLanguage:jsonc'
+2025-08-26 11:36:12.646 [info] ExtensionService#_doActivateExtension vscode.git, startup: true, activationEvent: '*'
+2025-08-26 11:36:12.646 [info] ExtensionService#_doActivateExtension vscode.github, startup: true, activationEvent: '*'
+2025-08-26 11:36:13.188 [info] Eager extensions activated
+2025-08-26 11:36:13.188 [info] ExtensionService#_doActivateExtension EditorConfig.EditorConfig, startup: false, activationEvent: 'onStartupFinished'
+2025-08-26 11:36:13.189 [info] ExtensionService#_doActivateExtension google.geminicodeassist, startup: false, activationEvent: 'onStartupFinished', root cause: googlecloudtools.cloudcode
+2025-08-26 11:36:13.190 [info] ExtensionService#_doActivateExtension vscode.debug-auto-launch, startup: false, activationEvent: 'onStartupFinished'
+2025-08-26 11:36:13.190 [info] ExtensionService#_doActivateExtension google.gemini-cli-vscode-ide-companion, startup: false, activationEvent: 'onStartupFinished'
+2025-08-26 11:36:13.191 [info] ExtensionService#_doActivateExtension vscode.merge-conflict, startup: false, activationEvent: 'onStartupFinished'
+2025-08-26 11:36:15.971 [info] ExtensionService#_doActivateExtension googlecloudtools.cloudcode, startup: false, activationEvent: 'onStartupFinished'
+2025-08-26 11:36:19.282 [info] ExtensionService#_doActivateExtension vscode.github-authentication, startup: false, activationEvent: 'onAuthenticationRequest:github'
+2025-08-26 12:37:02.544 [error] Error: unauthorized.
+    at e.Authorization.authorize (/google/devshell/editor/code-oss-for-cloud-shell/extensions/cloud-shell/dist/extension.js:1:6008)
+    at Wb.resp [as h] (file:///google/devshell/editor/code-oss-for-cloud-shell/out/vs/workbench/api/node/extensionHostProcess.js:119:41516)
+    at t.CloudShellTheiaAuth.promptForOrGetAuth (/google/devshell/editor/code-oss-for-cloud-shell/extensions/geminicodeassist/dist/webpack:/common/packages/cloudshell/authorization.ts:86:11)
+    at t.CloudShellTheiaAuth.validCache [as runAuthorization] (/google/devshell/editor/code-oss-for-cloud-shell/extensions/geminicodeassist/dist/webpack:/common/packages/cloudshell/authorization.ts:70:7)
+    at t.CloudShellAuthProvider.accessToken [as getAccessToken] (/google/devshell/editor/code-oss-for-cloud-shell/extensions/geminicodeassist/dist/webpack:/common/packages/auth/cloudshell_auth_provider.ts:39:35)
+    at c.updateExperimentationDataCache (/google/devshell/editor/code-oss-for-cloud-shell/extensions/geminicodeassist/dist/webpack:/common/packages/experimentation/experiment_service.ts:299:11)
+    at context (/google/devshell/editor/code-oss-for-cloud-shell/extensions/geminicodeassist/dist/webpack:/common/packages/experimentation/experiment_service.ts:290:117)
+    at c.updateExperimentationData (/google/devshell/editor/code-oss-for-cloud-shell/extensions/geminicodeassist/dist/webpack:/gemini_code_assist/src/packages/experimentation/gemini_experiment_service.ts:46:35) cloudshell.authorize {"value":"google.cloud-shell","_lower":"google.cloud-shell"}
+2025-08-26 12:37:03.547 [error] Error: Error calling Cloud Shell Theia Authorization. unauthorized.
+    at t.CloudShellTheiaAuth.validCache [as runAuthorization] (/google/devshell/editor/code-oss-for-cloud-shell/extensions/geminicodeassist/dist/webpack:/common/packages/cloudshell/authorization.ts:73:13)
+    at t.CloudShellAuthProvider.accessToken [as getAccessToken] (/google/devshell/editor/code-oss-for-cloud-shell/extensions/geminicodeassist/dist/webpack:/common/packages/auth/cloudshell_auth_provider.ts:39:35)
+    at c.updateExperimentationDataCache (/google/devshell/editor/code-oss-for-cloud-shell/extensions/geminicodeassist/dist/webpack:/common/packages/experimentation/experiment_service.ts:299:11)
+    at context (/google/devshell/editor/code-oss-for-cloud-shell/extensions/geminicodeassist/dist/webpack:/common/packages/experimentation/experiment_service.ts:290:117)
+    at c.updateExperimentationData (/google/devshell/editor/code-oss-for-cloud-shell/extensions/geminicodeassist/dist/webpack:/gemini_code_assist/src/packages/experimentation/gemini_experiment_service.ts:46:35)

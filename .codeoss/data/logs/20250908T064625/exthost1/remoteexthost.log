@@ -1,0 +1,38 @@
+2025-09-08 06:46:45.155 [info] Extension host with pid 1653 started
+2025-09-08 06:46:45.155 [error] Error: EEXIST: file already exists, open '/home/p_budhwar/.codeoss/data/User/workspaceStorage/-4380ecdd/vscode.lock'
+2025-09-08 06:46:45.156 [info] Lock '/home/p_budhwar/.codeoss/data/User/workspaceStorage/-4380ecdd/vscode.lock': Could not acquire lock, checking if the file is stale.
+2025-09-08 06:46:45.157 [info] Lock '/home/p_budhwar/.codeoss/data/User/workspaceStorage/-4380ecdd/vscode.lock': The pid 1683 appears to be gone.
+2025-09-08 06:46:45.157 [info] Lock '/home/p_budhwar/.codeoss/data/User/workspaceStorage/-4380ecdd/vscode.lock': Deleting a stale lock.
+2025-09-08 06:46:45.191 [info] Lock '/home/p_budhwar/.codeoss/data/User/workspaceStorage/-4380ecdd/vscode.lock': Lock acquired.
+2025-09-08 06:46:45.809 [info] ExtensionService#_doActivateExtension google.geminicodeassist, startup: false, activationEvent: 'onView:cloudcode.gemini.chatView'
+2025-09-08 06:46:45.810 [info] ExtensionService#_doActivateExtension vscode.emmet, startup: false, activationEvent: 'onLanguage'
+2025-09-08 06:46:45.811 [info] ExtensionService#_doActivateExtension vscode.extension-editing, startup: false, activationEvent: 'onLanguage:markdown'
+2025-09-08 06:46:45.811 [info] ExtensionService#_doActivateExtension vscode.markdown-language-features, startup: false, activationEvent: 'onLanguage:markdown'
+2025-09-08 06:46:45.812 [info] ExtensionService#_doActivateExtension vscode.configuration-editing, startup: false, activationEvent: 'onLanguage:jsonc'
+2025-09-08 06:46:45.812 [info] ExtensionService#_doActivateExtension vscode.json-language-features, startup: false, activationEvent: 'onLanguage:jsonc'
+2025-09-08 06:46:45.812 [info] ExtensionService#_doActivateExtension vscode.typescript-language-features, startup: false, activationEvent: 'onLanguage:jsonc'
+2025-09-08 06:46:48.576 [info] ExtensionService#_doActivateExtension vscode.git-base, startup: true, activationEvent: '*', root cause: vscode.git
+2025-09-08 06:46:48.630 [info] ExtensionService#_doActivateExtension google.cloud-shell, startup: false, activationEvent: 'onTerminalProfile:cloudshell.default'
+2025-09-08 06:46:49.221 [info] ExtensionService#_doActivateExtension vscode.git, startup: true, activationEvent: '*'
+2025-09-08 06:46:49.221 [info] ExtensionService#_doActivateExtension vscode.github, startup: true, activationEvent: '*'
+2025-09-08 06:46:50.193 [info] ExtensionService#_doActivateExtension vscode.markdown-math, startup: false, activationEvent: 'api', root cause: vscode.markdown-language-features
+2025-09-08 06:46:50.571 [info] Eager extensions activated
+2025-09-08 06:46:50.571 [info] ExtensionService#_doActivateExtension EditorConfig.EditorConfig, startup: false, activationEvent: 'onStartupFinished'
+2025-09-08 06:46:50.572 [info] ExtensionService#_doActivateExtension vscode.debug-auto-launch, startup: false, activationEvent: 'onStartupFinished'
+2025-09-08 06:46:50.573 [info] ExtensionService#_doActivateExtension google.gemini-cli-vscode-ide-companion, startup: false, activationEvent: 'onStartupFinished'
+2025-09-08 06:46:50.573 [info] ExtensionService#_doActivateExtension vscode.merge-conflict, startup: false, activationEvent: 'onStartupFinished'
+2025-09-08 06:46:51.270 [info] ExtensionService#_doActivateExtension googlecloudtools.cloudcode, startup: false, activationEvent: 'onStartupFinished'
+2025-09-08 06:46:55.738 [info] ExtensionService#_doActivateExtension vscode.github-authentication, startup: false, activationEvent: 'onAuthenticationRequest:github'
+2025-09-08 06:50:14.969 [error] EntryNotFound (FileSystemError): Error: ENOENT: no such file or directory, stat '/home/p_budhwar/.claude.lock'
+    at Function.e (file:///google/devshell/editor/code-oss-for-cloud-shell/out/vs/workbench/api/node/extensionHostProcess.js:119:18064)
+    at Object.stat (file:///google/devshell/editor/code-oss-for-cloud-shell/out/vs/workbench/api/node/extensionHostProcess.js:119:16011)
+    at t.ChatViewProvider.uri [as addFileOrFolder] (/google/devshell/editor/code-oss-for-cloud-shell/extensions/geminicodeassist/dist/webpack:/gemini_code_assist/src/ai-companion/chat/chat_view_provider.ts:225:11)
+    at ed.value (/google/devshell/editor/code-oss-for-cloud-shell/extensions/geminicodeassist/dist/webpack:/gemini_code_assist/src/ai-companion/chat/chat_view_provider.ts:210:52)
+2025-09-08 06:50:14.978 [error] EntryNotFound (FileSystemError): Error: ENOENT: no such file or directory, stat '/home/p_budhwar/.claude.lock'
+    at Function.e (file:///google/devshell/editor/code-oss-for-cloud-shell/out/vs/workbench/api/node/extensionHostProcess.js:119:18064)
+    at Object.stat (file:///google/devshell/editor/code-oss-for-cloud-shell/out/vs/workbench/api/node/extensionHostProcess.js:119:16011)
+    at t.ChatViewProvider.uri [as addFileOrFolder] (/google/devshell/editor/code-oss-for-cloud-shell/extensions/geminicodeassist/dist/webpack:/gemini_code_assist/src/ai-companion/chat/chat_view_provider.ts:225:11)
+    at ed.value (/google/devshell/editor/code-oss-for-cloud-shell/extensions/geminicodeassist/dist/webpack:/gemini_code_assist/src/ai-companion/chat/chat_view_provider.ts:210:52)
+2025-09-08 06:55:08.800 [info] Extension host terminating: received terminate message from renderer
+2025-09-08 06:55:08.802 [info] Lock '/home/p_budhwar/.codeoss/data/User/workspaceStorage/-4380ecdd/vscode.lock': Marking the lockfile as scheduled to be released in 6000 ms.
+2025-09-08 06:55:08.899 [info] Extension host with pid 1653 exiting with code 0

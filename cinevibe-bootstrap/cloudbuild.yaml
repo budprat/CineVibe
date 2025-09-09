@@ -1,0 +1,207 @@
+# Main CloudBuild configuration for CineVibe
+# Orchestrates deployment of all components
+
+substitutions:
+  _REGION: us-central1
+  _ARTIFACT_REPO: cinevibe-agents
+  _SPANNER_INSTANCE: cinevibe-graph-instance
+  _SPANNER_DATABASE: graphdb
+
+steps:
+  # Step 1: Run tests
+  - name: 'python:3.12'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        pip install -r requirements.txt
+        pip install -r requirements-dev.txt
+        python -m pytest tests/ -v
+    id: 'run-tests'
+
+  # Step 2: Setup Spanner Database
+  - name: 'gcr.io/cloud-builders/gcloud'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        python setup.py || echo "Database might already exist"
+    env:
+      - 'PROJECT_ID=${PROJECT_ID}'
+      - 'SPANNER_INSTANCE_ID=${_SPANNER_INSTANCE}'
+      - 'SPANNER_DATABASE_ID=${_SPANNER_DATABASE}'
+    id: 'setup-database'
+    waitFor: ['run-tests']
+
+  # Step 3: Build Script Analyzer Agent
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [
+      'build',
+      '-t', '${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_ARTIFACT_REPO}/script-analyzer:${SHORT_SHA}',
+      '-t', '${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_ARTIFACT_REPO}/script-analyzer:latest',
+      'agents/script_analyzer'
+    ]
+    id: 'build-script-analyzer'
+    waitFor: ['run-tests']
+
+  # Step 4: Build Visual Consistency Agent
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [
+      'build',
+      '-t', '${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_ARTIFACT_REPO}/visual-consistency:${SHORT_SHA}',
+      '-t', '${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_ARTIFACT_REPO}/visual-consistency:latest',
+      'agents/visual_consistency'
+    ]
+    id: 'build-visual-consistency'
+    waitFor: ['run-tests']
+
+  # Step 5: Build Generation Platform Agent
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [
+      'build',
+      '-t', '${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_ARTIFACT_REPO}/generation-platform:${SHORT_SHA}',
+      '-t', '${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_ARTIFACT_REPO}/generation-platform:latest',
+      'agents/generation_platform'
+    ]
+    id: 'build-generation-platform'
+    waitFor: ['run-tests']
+
+  # Step 6: Build Director Agent
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [
+      'build',
+      '-t', '${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_ARTIFACT_REPO}/director:${SHORT_SHA}',
+      '-t', '${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_ARTIFACT_REPO}/director:latest',
+      'agents/director'
+    ]
+    id: 'build-director'
+    waitFor: ['run-tests']
+
+  # Step 7: Build Web Application
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [
+      'build',
+      '-t', '${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_ARTIFACT_REPO}/web-app:${SHORT_SHA}',
+      '-t', '${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_ARTIFACT_REPO}/web-app:latest',
+      '-f', 'cinevibe/Dockerfile',
+      'cinevibe'
+    ]
+    id: 'build-web-app'
+    waitFor: ['run-tests']
+
+  # Step 8: Build MCP Server
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [
+      'build',
+      '-t', '${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_ARTIFACT_REPO}/mcp-server:${SHORT_SHA}',
+      '-t', '${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_ARTIFACT_REPO}/mcp-server:latest',
+      '-f', 'tools/ai_platforms/Dockerfile',
+      'tools/ai_platforms'
+    ]
+    id: 'build-mcp-server'
+    waitFor: ['run-tests']
+
+  # Push all images to Artifact Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', '--all-tags', '${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_ARTIFACT_REPO}/script-analyzer']
+    waitFor: ['build-script-analyzer']
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', '--all-tags', '${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_ARTIFACT_REPO}/visual-consistency']
+    waitFor: ['build-visual-consistency']
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', '--all-tags', '${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_ARTIFACT_REPO}/generation-platform']
+    waitFor: ['build-generation-platform']
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', '--all-tags', '${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_ARTIFACT_REPO}/director']
+    waitFor: ['build-director']
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', '--all-tags', '${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_ARTIFACT_REPO}/web-app']
+    waitFor: ['build-web-app']
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', '--all-tags', '${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_ARTIFACT_REPO}/mcp-server']
+    waitFor: ['build-mcp-server']
+
+  # Deploy to Cloud Run
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args: [
+      'run', 'deploy', 'script-analyzer',
+      '--image', '${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_ARTIFACT_REPO}/script-analyzer:${SHORT_SHA}',
+      '--region', '${_REGION}',
+      '--platform', 'managed',
+      '--port', '8001',
+      '--allow-unauthenticated',
+      '--set-env-vars', 'PROJECT_ID=${PROJECT_ID},SPANNER_INSTANCE_ID=${_SPANNER_INSTANCE},SPANNER_DATABASE_ID=${_SPANNER_DATABASE}'
+    ]
+    id: 'deploy-script-analyzer'
+
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args: [
+      'run', 'deploy', 'visual-consistency',
+      '--image', '${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_ARTIFACT_REPO}/visual-consistency:${SHORT_SHA}',
+      '--region', '${_REGION}',
+      '--platform', 'managed',
+      '--port', '8002',
+      '--allow-unauthenticated',
+      '--set-env-vars', 'PROJECT_ID=${PROJECT_ID},SPANNER_INSTANCE_ID=${_SPANNER_INSTANCE},SPANNER_DATABASE_ID=${_SPANNER_DATABASE}'
+    ]
+    id: 'deploy-visual-consistency'
+
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args: [
+      'run', 'deploy', 'generation-platform',
+      '--image', '${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_ARTIFACT_REPO}/generation-platform:${SHORT_SHA}',
+      '--region', '${_REGION}',
+      '--platform', 'managed',
+      '--port', '8003',
+      '--allow-unauthenticated',
+      '--set-env-vars', 'PROJECT_ID=${PROJECT_ID}'
+    ]
+    id: 'deploy-generation-platform'
+
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args: [
+      'run', 'deploy', 'director',
+      '--image', '${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_ARTIFACT_REPO}/director:${SHORT_SHA}',
+      '--region', '${_REGION}',
+      '--platform', 'managed',
+      '--port', '8000',
+      '--allow-unauthenticated',
+      '--set-env-vars', 'PROJECT_ID=${PROJECT_ID},REMOTE_AGENT_ADDRESSES=script-analyzer:8001,visual-consistency:8002,generation-platform:8003'
+    ]
+    id: 'deploy-director'
+
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args: [
+      'run', 'deploy', 'cinevibe-web',
+      '--image', '${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_ARTIFACT_REPO}/web-app:${SHORT_SHA}',
+      '--region', '${_REGION}',
+      '--platform', 'managed',
+      '--port', '5000',
+      '--allow-unauthenticated',
+      '--set-env-vars', 'PROJECT_ID=${PROJECT_ID},SPANNER_INSTANCE_ID=${_SPANNER_INSTANCE},SPANNER_DATABASE_ID=${_SPANNER_DATABASE},DIRECTOR_AGENT_URL=https://director-${PROJECT_ID}.${_REGION}.run.app'
+    ]
+    id: 'deploy-web-app'
+
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args: [
+      'run', 'deploy', 'mcp-server',
+      '--image', '${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_ARTIFACT_REPO}/mcp-server:${SHORT_SHA}',
+      '--region', '${_REGION}',
+      '--platform', 'managed',
+      '--port', '5001',
+      '--allow-unauthenticated',
+      '--set-env-vars', 'PROJECT_ID=${PROJECT_ID}'
+    ]
+    id: 'deploy-mcp-server'
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+  machineType: 'E2_HIGHCPU_8'
+  dynamicSubstitutions: true
+
+timeout: '2400s'  # 40 minutes

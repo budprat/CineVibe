@@ -1,0 +1,14 @@
+2025-08-22 18:02:29.580 [warning] Dir "/home/p_budhwar/.pixi/envs" is not watchable (directory does not exist)
+2025-08-22 18:02:29.580 [info] Starting Environment refresh
+2025-08-22 18:02:29.580 [info] > hatch env show --json
+2025-08-22 18:02:29.580 [info] cwd: .
+2025-08-22 18:02:29.604 [info] > /bin/python -I /google/devshell/editor/code-oss-for-cloud-shell/extensions/ms-python.python/python_files/get_output_via_markers.py /google/devshell/editor/code-oss-for-cloud-shell/extensions/ms-python.python/python_files/interpreterInfo.py
+2025-08-22 18:02:29.607 [info] Environments refresh paths discovered: 401 milliseconds
+2025-08-22 18:02:29.642 [info] > pyenv which python
+2025-08-22 18:02:29.642 [info] cwd: .
+2025-08-22 18:02:29.694 [info] Environments refresh finished (event): 487 milliseconds
+2025-08-22 18:02:29.696 [info] Python interpreter path: /bin/python
+2025-08-22 18:02:29.699 [info] Environment refresh took 493 milliseconds
+2025-08-22 18:02:36.737 [info] Starting Jedi language server for p_budhwar.
+2025-08-22 18:05:45.302 [info] Discover tests for workspace name: p_budhwar - uri: /home/p_budhwar/instavibe-bootstrap/agents/planner/agent.py
+2025-08-22 18:06:01.065 [info] Discover tests for workspace name: p_budhwar - uri: /home/p_budhwar/instavibe-bootstrap/agents/planner/agent.py
