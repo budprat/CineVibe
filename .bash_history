@@ -45,7 +45,7 @@ pip install -r requirements.txt
 cd instavibe
 python setup.py
 . ~/instavibe-bootstrap/set_env.sh
-export KEY_DISPLAY_NAME="AIzaSyAbT-yRBrPeWjyeIpPw7hgQ41iB-YsGo_s"
+export KEY_DISPLAY_NAME="Maps Platform API Key"
 GOOGLE_MAPS_KEY_ID=$(gcloud services api-keys list \
   --project="${PROJECT_ID}" \
   --filter="displayName='${KEY_DISPLAY_NAME}'" \
@@ -55,7 +55,7 @@ GOOGLE_MAPS_API_KEY=$(gcloud services api-keys get-key-string "${GOOGLE_MAPS_KEY
     --project="${PROJECT_ID}" \
     --format="value(keyString)")
 echo ${GOOGLE_MAPS_KEY_ID}
-export GOOGLE_MAPS_KEY_ID="AIzaSyAbT-yRBrPeWjyeIpPw7hgQ41iB-YsGo_s"
+export GOOGLE_MAPS_KEY_ID="your-google-maps-key-id-here"
 GOOGLE_MAPS_API_KEY=$(gcloud services api-keys get-key-string "${GOOGLE_MAPS_KEY_ID}" \
     --project="${PROJECT_ID}" \
     --format="value(keyString)")
@@ -79,9 +79,9 @@ GOOGLE_MAPS_API_KEY=$(gcloud services api-keys get-key-string "${GOOGLE_MAPS_KEY
     --project="${PROJECT_ID}" \
     --format="value(keyString)")
 echo ${GOOGLE_MAPS_KEY_ID}
-export ${GOOGLE_MAPS_KEY_ID}=AIzaSyAbT-yRBrPeWjyeIpPw7hgQ41iB-YsGo_s
-export ${GOOGLE_MAPS_KEY_ID}="AIzaSyAbT-yRBrPeWjyeIpPw7hgQ41iB-YsGo_s"
-export GOOGLE_MAPS_KEY_ID="AIzaSyAbT-yRBrPeWjyeIpPw7hgQ41iB-YsGo_s"
+export ${GOOGLE_MAPS_KEY_ID}=your-google-maps-api-key-here
+export ${GOOGLE_MAPS_KEY_ID}="your-google-maps-api-key-here"
+export GOOGLE_MAPS_KEY_ID="your-google-maps-key-id-here"
 GOOGLE_MAPS_API_KEY=$(gcloud services api-keys get-key-string "${GOOGLE_MAPS_KEY_ID}" \
     --project="${PROJECT_ID}" \
     --format="value(keyString)")
