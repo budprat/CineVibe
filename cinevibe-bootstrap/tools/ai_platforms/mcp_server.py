@@ -11,16 +11,33 @@ import httpx
 import json
 import asyncio
 import os
-from typing import Dict, Any, Optional, AsyncGenerator
+import sys
+from typing import Dict, Any, Optional, AsyncGenerator, List
 from datetime import datetime
 import hashlib
 import logging
+from dataclasses import dataclass, field
+from enum import Enum
+
+# Add parent directory to path for imports
+sys.path.insert(0, str(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))))
+
+try:
+    from utils.resilience import retry_with_backoff, CircuitBreaker, circuit_breaker
+    from utils.logging_utils import setup_logging, set_correlation_id, get_correlation_id
+except ImportError:
+    # Fallback if utils not available
+    def retry_with_backoff(*args, **kwargs):
+        def decorator(func):
+            return func
+        return decorator
+    circuit_breaker = {}
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-app = FastAPI(title="CineVibe AI Platforms MCP Server")
+app = FastAPI(title="CineVibe AI Platforms MCP Server", version="2.0.0")
 
 # Add CORS middleware
 app.add_middleware(
@@ -37,9 +54,13 @@ PIKA_API_KEY = os.environ.get("PIKA_API_KEY", "")
 MIDJOURNEY_API_KEY = os.environ.get("MIDJOURNEY_API_KEY", "")
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY", "")  # For Sora
 STABILITY_API_KEY = os.environ.get("STABILITY_API_KEY", "")  # For Stable Diffusion
+GOOGLE_API_KEY = os.environ.get("GOOGLE_API_KEY", "")  # For Veo2 / Gemini
 
 # Track active generation jobs
-active_jobs = {}
+active_jobs: Dict[str, Dict] = {}
+
+# Track costs per session
+cost_tracker: Dict[str, float] = {}
 
 # Platform API endpoints
 API_ENDPOINTS = {
@@ -48,8 +69,77 @@ API_ENDPOINTS = {
     "midjourney": "https://api.midjourney.com/v1",
     "sora": "https://api.openai.com/v1",
     "stable_diffusion": "https://api.stability.ai/v1",
-    "veo2": "https://generativelanguage.googleapis.com/v1beta"
+    "veo2": "https://generativelanguage.googleapis.com/v1beta",
+    "nano_banana": "https://generativelanguage.googleapis.com/v1beta"
 }
+
+# Cost per generation (in USD)
+PLATFORM_COSTS = {
+    "runway": {"per_second": 0.15, "min_charge": 0.75},
+    "pika": {"per_second": 0.10, "min_charge": 0.50},
+    "sora": {"per_second": 0.20, "min_charge": 1.00},
+    "veo2": {"per_second": 0.18, "min_charge": 0.90},
+    "midjourney": {"per_image": 0.05},
+    "stable_diffusion": {"per_image": 0.02},
+    "nano_banana": {"per_image": 0.039},
+}
+
+
+class JobStatus(str, Enum):
+    QUEUED = "queued"
+    PROCESSING = "processing"
+    COMPLETED = "completed"
+    FAILED = "failed"
+    CANCELLED = "cancelled"
+
+
+@dataclass
+class GenerationJob:
+    """Track generation job details"""
+    job_id: str
+    platform: str
+    prompt: str
+    content_type: str  # "video" or "image"
+    status: JobStatus = JobStatus.QUEUED
+    created_at: datetime = field(default_factory=datetime.utcnow)
+    completed_at: Optional[datetime] = None
+    result_url: Optional[str] = None
+    error: Optional[str] = None
+    cost: float = 0.0
+    duration: Optional[int] = None
+    parameters: Dict = field(default_factory=dict)
+
+    def to_dict(self) -> Dict:
+        return {
+            "job_id": self.job_id,
+            "platform": self.platform,
+            "status": self.status.value,
+            "created_at": self.created_at.isoformat(),
+            "completed_at": self.completed_at.isoformat() if self.completed_at else None,
+            "result_url": self.result_url,
+            "error": self.error,
+            "cost": self.cost,
+            "duration": self.duration,
+        }
+
+
+def calculate_cost(platform: str, duration: Optional[int] = None, count: int = 1) -> float:
+    """Calculate generation cost for a platform"""
+    costs = PLATFORM_COSTS.get(platform, {})
+
+    if "per_second" in costs and duration:
+        return max(costs.get("min_charge", 0), costs["per_second"] * duration)
+    elif "per_image" in costs:
+        return costs["per_image"] * count
+
+    return 0.0
+
+
+def track_cost(session_id: str, amount: float):
+    """Track cost for a session"""
+    if session_id not in cost_tracker:
+        cost_tracker[session_id] = 0.0
+    cost_tracker[session_id] += amount
 
 async def generate_with_runway(
     prompt: str,
@@ -198,14 +288,345 @@ async def generate_with_nano_banana(
     parameters: Optional[Dict] = None
 ) -> Dict:
     """Generate image using Google's Nano Banana (Gemini 2.5 Flash Image)"""
-    # This would integrate with Google's Gemini API
-    # Placeholder implementation
-    return {
-        "job_id": hashlib.md5(prompt.encode()).hexdigest(),
-        "status": "processing",
-        "platform": "nano_banana",
-        "message": "Nano Banana generation initiated"
-    }
+    if not GOOGLE_API_KEY:
+        return {"error": "Google API key not configured"}
+
+    async with httpx.AsyncClient() as client:
+        try:
+            # Gemini 2.5 Flash image generation endpoint
+            response = await client.post(
+                f"{API_ENDPOINTS['nano_banana']}/models/gemini-2.5-flash:generateContent",
+                headers={
+                    "x-goog-api-key": GOOGLE_API_KEY,
+                    "Content-Type": "application/json"
+                },
+                json={
+                    "contents": [
+                        {
+                            "parts": [
+                                {"text": f"Generate a high quality cinematic image: {prompt}"}
+                            ]
+                        }
+                    ],
+                    "generationConfig": {
+                        "responseModalities": ["IMAGE"],
+                        "imageSamplingParameters": {
+                            "aspectRatio": parameters.get("aspect_ratio", "16:9") if parameters else "16:9"
+                        }
+                    }
+                },
+                timeout=60.0
+            )
+
+            if response.status_code == 200:
+                result = response.json()
+                job_id = hashlib.md5(prompt.encode()).hexdigest()
+
+                # Calculate cost
+                cost = calculate_cost("nano_banana")
+
+                active_jobs[job_id] = GenerationJob(
+                    job_id=job_id,
+                    platform="nano_banana",
+                    prompt=prompt,
+                    content_type="image",
+                    status=JobStatus.COMPLETED,
+                    cost=cost,
+                    result_url=result.get("candidates", [{}])[0].get("content", {}).get("parts", [{}])[0].get("fileUri")
+                ).to_dict()
+
+                return {
+                    "job_id": job_id,
+                    "status": "completed",
+                    "platform": "nano_banana",
+                    "result": result,
+                    "cost": cost
+                }
+            else:
+                return {"error": f"Nano Banana API error: {response.status_code}", "details": response.text}
+
+        except Exception as e:
+            logger.error(f"Nano Banana generation error: {e}")
+            return {"error": str(e)}
+
+
+async def generate_with_sora(
+    prompt: str,
+    duration: int = 10,
+    parameters: Optional[Dict] = None
+) -> Dict:
+    """
+    Generate video using OpenAI Sora.
+
+    Sora is OpenAI's video generation model capable of creating
+    high-quality videos up to 60 seconds long.
+    """
+    if not OPENAI_API_KEY:
+        return {"error": "OpenAI API key not configured"}
+
+    job_id = hashlib.md5(f"{prompt}_{datetime.utcnow().isoformat()}".encode()).hexdigest()[:12]
+
+    async with httpx.AsyncClient() as client:
+        try:
+            # OpenAI Sora API endpoint (hypothetical - adjust when API is available)
+            response = await client.post(
+                f"{API_ENDPOINTS['sora']}/videos/generations",
+                headers={
+                    "Authorization": f"Bearer {OPENAI_API_KEY}",
+                    "Content-Type": "application/json"
+                },
+                json={
+                    "model": "sora-1.0",
+                    "prompt": prompt,
+                    "duration": min(duration, 60),  # Max 60 seconds
+                    "quality": parameters.get("quality", "hd") if parameters else "hd",
+                    "style": parameters.get("style", "cinematic") if parameters else "cinematic",
+                    "size": parameters.get("size", "1920x1080") if parameters else "1920x1080",
+                },
+                timeout=120.0  # Sora may take longer
+            )
+
+            cost = calculate_cost("sora", duration)
+
+            if response.status_code == 200:
+                result = response.json()
+                video_id = result.get("id", job_id)
+
+                active_jobs[video_id] = GenerationJob(
+                    job_id=video_id,
+                    platform="sora",
+                    prompt=prompt,
+                    content_type="video",
+                    status=JobStatus.PROCESSING,
+                    duration=duration,
+                    cost=cost,
+                    parameters=parameters or {}
+                ).to_dict()
+
+                return {
+                    "job_id": video_id,
+                    "status": "processing",
+                    "platform": "sora",
+                    "estimated_time": duration * 3,  # Rough estimate: 3x real-time
+                    "cost_estimate": cost
+                }
+            elif response.status_code == 429:
+                return {"error": "Sora rate limit exceeded", "retry_after": response.headers.get("Retry-After", 60)}
+            else:
+                return {"error": f"Sora API error: {response.status_code}", "details": response.text}
+
+        except httpx.TimeoutException:
+            # For long videos, return a processing job that can be polled
+            active_jobs[job_id] = GenerationJob(
+                job_id=job_id,
+                platform="sora",
+                prompt=prompt,
+                content_type="video",
+                status=JobStatus.PROCESSING,
+                duration=duration,
+                cost=calculate_cost("sora", duration)
+            ).to_dict()
+
+            return {
+                "job_id": job_id,
+                "status": "processing",
+                "platform": "sora",
+                "message": "Generation started - poll for status"
+            }
+
+        except Exception as e:
+            logger.error(f"Sora generation error: {e}")
+            return {"error": str(e)}
+
+
+async def generate_with_veo2(
+    prompt: str,
+    duration: int = 8,
+    parameters: Optional[Dict] = None
+) -> Dict:
+    """
+    Generate video using Google Veo2.
+
+    Veo2 is Google's advanced video generation model integrated with Gemini,
+    capable of generating high-quality, photorealistic videos.
+    """
+    if not GOOGLE_API_KEY:
+        return {"error": "Google API key not configured"}
+
+    job_id = hashlib.md5(f"{prompt}_{datetime.utcnow().isoformat()}".encode()).hexdigest()[:12]
+
+    async with httpx.AsyncClient() as client:
+        try:
+            # Google Veo2 via Vertex AI / Generative AI API
+            response = await client.post(
+                f"{API_ENDPOINTS['veo2']}/models/veo-2.0-generate-001:generateVideo",
+                headers={
+                    "x-goog-api-key": GOOGLE_API_KEY,
+                    "Content-Type": "application/json"
+                },
+                json={
+                    "prompt": {
+                        "text": prompt
+                    },
+                    "videoConfig": {
+                        "aspectRatio": parameters.get("aspect_ratio", "16:9") if parameters else "16:9",
+                        "durationSec": min(duration, 20),  # Veo2 max duration
+                        "personGeneration": parameters.get("person_generation", "ALLOW_ADULT") if parameters else "ALLOW_ADULT",
+                        "numberOfVideos": 1
+                    },
+                    "outputConfig": {
+                        "compressionQuality": parameters.get("quality", "HIGH") if parameters else "HIGH"
+                    }
+                },
+                timeout=90.0
+            )
+
+            cost = calculate_cost("veo2", duration)
+
+            if response.status_code == 200:
+                result = response.json()
+
+                # Veo2 returns an operation that needs to be polled
+                operation_name = result.get("name", job_id)
+
+                active_jobs[job_id] = GenerationJob(
+                    job_id=job_id,
+                    platform="veo2",
+                    prompt=prompt,
+                    content_type="video",
+                    status=JobStatus.PROCESSING,
+                    duration=duration,
+                    cost=cost,
+                    parameters={
+                        "operation_name": operation_name,
+                        **(parameters or {})
+                    }
+                ).to_dict()
+
+                return {
+                    "job_id": job_id,
+                    "operation_name": operation_name,
+                    "status": "processing",
+                    "platform": "veo2",
+                    "estimated_time": duration * 2,  # Rough estimate
+                    "cost_estimate": cost
+                }
+
+            elif response.status_code == 400:
+                return {"error": "Invalid request to Veo2", "details": response.text}
+            elif response.status_code == 403:
+                return {"error": "Veo2 access denied - check API key and quotas"}
+            else:
+                return {"error": f"Veo2 API error: {response.status_code}", "details": response.text}
+
+        except httpx.TimeoutException:
+            # Start async generation
+            active_jobs[job_id] = GenerationJob(
+                job_id=job_id,
+                platform="veo2",
+                prompt=prompt,
+                content_type="video",
+                status=JobStatus.PROCESSING,
+                duration=duration,
+                cost=calculate_cost("veo2", duration)
+            ).to_dict()
+
+            return {
+                "job_id": job_id,
+                "status": "processing",
+                "platform": "veo2",
+                "message": "Generation started - poll for status"
+            }
+
+        except Exception as e:
+            logger.error(f"Veo2 generation error: {e}")
+            return {"error": str(e)}
+
+
+async def poll_veo2_status(operation_name: str) -> Dict:
+    """Poll Veo2 operation status"""
+    if not GOOGLE_API_KEY:
+        return {"error": "Google API key not configured"}
+
+    async with httpx.AsyncClient() as client:
+        try:
+            response = await client.get(
+                f"{API_ENDPOINTS['veo2']}/{operation_name}",
+                headers={
+                    "x-goog-api-key": GOOGLE_API_KEY
+                },
+                timeout=30.0
+            )
+
+            if response.status_code == 200:
+                result = response.json()
+
+                if result.get("done"):
+                    # Operation completed
+                    video_result = result.get("response", {})
+                    return {
+                        "status": "completed",
+                        "videos": video_result.get("generatedVideos", []),
+                        "operation_name": operation_name
+                    }
+                else:
+                    # Still processing
+                    return {
+                        "status": "processing",
+                        "progress": result.get("metadata", {}).get("progress", 0),
+                        "operation_name": operation_name
+                    }
+            else:
+                return {"error": f"Status check failed: {response.status_code}"}
+
+        except Exception as e:
+            logger.error(f"Veo2 status check error: {e}")
+            return {"error": str(e)}
+
+
+async def poll_sora_status(job_id: str) -> Dict:
+    """Poll Sora job status"""
+    if not OPENAI_API_KEY:
+        return {"error": "OpenAI API key not configured"}
+
+    async with httpx.AsyncClient() as client:
+        try:
+            response = await client.get(
+                f"{API_ENDPOINTS['sora']}/videos/generations/{job_id}",
+                headers={
+                    "Authorization": f"Bearer {OPENAI_API_KEY}"
+                },
+                timeout=30.0
+            )
+
+            if response.status_code == 200:
+                result = response.json()
+                status = result.get("status", "unknown")
+
+                if status == "succeeded":
+                    return {
+                        "status": "completed",
+                        "url": result.get("url"),
+                        "job_id": job_id
+                    }
+                elif status == "failed":
+                    return {
+                        "status": "failed",
+                        "error": result.get("error", "Unknown error"),
+                        "job_id": job_id
+                    }
+                else:
+                    return {
+                        "status": "processing",
+                        "progress": result.get("progress", 0),
+                        "job_id": job_id
+                    }
+            else:
+                return {"error": f"Status check failed: {response.status_code}"}
+
+        except Exception as e:
+            logger.error(f"Sora status check error: {e}")
+            return {"error": str(e)}
 
 @app.post("/list-tools")
 async def list_tools():
@@ -335,11 +756,9 @@ async def call_tool(request: Request):
                 elif platform == "pika":
                     result = await generate_with_pika(prompt, parameters)
                 elif platform == "sora":
-                    # Sora implementation would go here
-                    result = {"message": "Sora integration pending", "job_id": hashlib.md5(prompt.encode()).hexdigest()}
+                    result = await generate_with_sora(prompt, duration, parameters)
                 elif platform == "veo2":
-                    # Veo2 implementation would go here
-                    result = {"message": "Veo2 integration pending", "job_id": hashlib.md5(prompt.encode()).hexdigest()}
+                    result = await generate_with_veo2(prompt, duration, parameters)
                 else:
                     result = {"error": f"Unknown platform: {platform}"}
             

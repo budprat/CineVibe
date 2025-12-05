@@ -444,23 +444,590 @@
         </main>
     </div>
     
-    <script>
-        function uploadNewScript() {
-            window.location.href = '/';
+    <!-- Script Upload Modal -->
+    <div id="uploadModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Upload New Script</h2>
+                <span class="close-btn" onclick="closeModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="scriptUploadForm">
+                    <div class="form-group">
+                        <label for="scriptTitle">Title</label>
+                        <input type="text" id="scriptTitle" placeholder="Enter script title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="scriptAuthor">Author</label>
+                        <input type="text" id="scriptAuthor" placeholder="Enter author name">
+                    </div>
+                    <div class="form-group">
+                        <label for="scriptContent">Script Content</label>
+                        <textarea id="scriptContent" rows="15" placeholder="Paste your screenplay here (Fountain format supported)..." required></textarea>
+                    </div>
+                    <div class="form-group file-drop" id="dropZone">
+                        <div class="drop-icon">📄</div>
+                        <p>Or drag and drop a script file here</p>
+                        <input type="file" id="scriptFile" accept=".txt,.fountain,.fdx" style="display: none;">
+                    </div>
+                    <button type="submit" class="btn-primary btn-full">
+                        <span id="uploadBtnText">Analyze Script</span>
+                        <span id="uploadSpinner" class="spinner" style="display: none;"></span>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div id="toastContainer"></div>
+
+    <style>
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
         }
-        
+        .modal-content {
+            background: #1a1a1a;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid #333;
+        }
+        .close-btn {
+            font-size: 28px;
+            cursor: pointer;
+            color: #888;
+        }
+        .close-btn:hover { color: #fff; }
+        .modal-body { padding: 20px; }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #888;
+        }
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            background: #222;
+            border: 1px solid #333;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 14px;
+        }
+        .form-group input:focus, .form-group textarea:focus {
+            border-color: #667eea;
+            outline: none;
+        }
+        .file-drop {
+            border: 2px dashed #333;
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .file-drop:hover, .file-drop.dragover {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+        }
+        .drop-icon { font-size: 2em; margin-bottom: 10px; }
+        .btn-full { width: 100%; }
+        .spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #fff;
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        #toastContainer {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 2000;
+        }
+        .toast {
+            background: #222;
+            padding: 16px 24px;
+            border-radius: 8px;
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            animation: slideIn 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        .toast.success { border-left: 4px solid #4CAF50; }
+        .toast.error { border-left: 4px solid #f44336; }
+        .toast.info { border-left: 4px solid #2196F3; }
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        .connection-status {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .connection-status.connected { background: #4CAF50; }
+        .connection-status.disconnected { background: #f44336; }
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: currentColor;
+        }
+        .progress-bar {
+            height: 4px;
+            background: #333;
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.3s ease;
+        }
+        .agent-status-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .agent-status-item {
+            background: #1a1a1a;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 12px;
+        }
+        .agent-status-item.online { border-left: 3px solid #4CAF50; }
+        .agent-status-item.offline { border-left: 3px solid #f44336; }
+    </style>
+
+    <div class="connection-status disconnected" id="connectionStatus">
+        <span class="status-dot"></span>
+        <span id="connectionText">Connecting...</span>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.4/socket.io.min.js"></script>
+    <script>
+        // WebSocket connection
+        let socket = null;
+        let currentProjectId = null;
+
+        // Initialize Socket.IO connection
+        function initializeWebSocket() {
+            socket = io({
+                transports: ['websocket', 'polling']
+            });
+
+            socket.on('connect', () => {
+                updateConnectionStatus(true);
+                showToast('Connected to CineVibe server', 'success');
+            });
+
+            socket.on('disconnect', () => {
+                updateConnectionStatus(false);
+                showToast('Connection lost. Reconnecting...', 'error');
+            });
+
+            socket.on('connected', (data) => {
+                console.log('Server acknowledged connection:', data);
+            });
+
+            // Pipeline updates
+            socket.on('pipeline_update', (data) => {
+                console.log('Pipeline update:', data);
+                updatePipelineUI(data);
+                showToast(`${data.phase}: ${data.status}`, 'info');
+            });
+
+            // Generation progress
+            socket.on('generation_progress', (data) => {
+                updateGenerationProgress(data);
+            });
+
+            // Generation complete
+            socket.on('generation_complete', (data) => {
+                showToast(`${data.asset_type} generated successfully!`, 'success');
+                addActivityItem('🎥', `${data.asset_type} generated`, 'Just now');
+                refreshProjectStats();
+            });
+
+            // Character update
+            socket.on('character_update', (data) => {
+                showToast(`Character DNA created: ${data.character_name}`, 'success');
+                addActivityItem('👤', `Character DNA created for ${data.character_name}`, 'Just now');
+            });
+
+            // Scene update
+            socket.on('scene_update', (data) => {
+                showToast(`Scene ${data.scene_number} analyzed: ${data.location}`, 'info');
+            });
+
+            // Agent status updates
+            socket.on('agent_status', (data) => {
+                updateAgentStatus(data);
+            });
+
+            // Error handling
+            socket.on('error', (data) => {
+                showToast(`Error: ${data.message}`, 'error');
+                console.error('Server error:', data);
+            });
+
+            // Cost estimate response
+            socket.on('cost_estimate', (data) => {
+                showCostEstimate(data);
+            });
+
+            // Production started
+            socket.on('production_started', (data) => {
+                console.log('Production started:', data);
+                initializePipelinePhases(data.phases);
+            });
+        }
+
+        // Connection status UI
+        function updateConnectionStatus(connected) {
+            const statusEl = document.getElementById('connectionStatus');
+            const textEl = document.getElementById('connectionText');
+
+            if (connected) {
+                statusEl.className = 'connection-status connected';
+                textEl.textContent = 'Connected';
+            } else {
+                statusEl.className = 'connection-status disconnected';
+                textEl.textContent = 'Disconnected';
+            }
+        }
+
+        // Toast notifications
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.innerHTML = `
+                <span>${type === 'success' ? '✓' : type === 'error' ? '✗' : 'ℹ'}</span>
+                <span>${message}</span>
+            `;
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.animation = 'slideIn 0.3s ease reverse';
+                setTimeout(() => toast.remove(), 300);
+            }, 4000);
+        }
+
+        // Pipeline UI updates
+        function updatePipelineUI(data) {
+            const phases = document.querySelectorAll('.phase');
+            const phaseIndex = {
+                'Script Analysis': 0,
+                'Character DNA': 1,
+                'Storyboarding': 2,
+                'Video Generation': 3,
+                'Quality Check': 4
+            };
+
+            const idx = phaseIndex[data.phase];
+            if (idx !== undefined) {
+                phases.forEach((phase, i) => {
+                    if (i < idx) {
+                        phase.className = 'phase completed';
+                    } else if (i === idx) {
+                        phase.className = data.status === 'completed' ? 'phase completed' : 'phase active';
+                    } else {
+                        phase.className = 'phase';
+                    }
+                });
+            }
+
+            // Update status badge
+            const statusEl = document.querySelector('.pipeline-status');
+            if (data.status === 'completed') {
+                statusEl.className = 'pipeline-status status-active';
+                statusEl.textContent = 'Completed';
+            } else {
+                statusEl.className = 'pipeline-status status-processing';
+                statusEl.textContent = 'Processing';
+            }
+        }
+
+        function initializePipelinePhases(phases) {
+            const container = document.querySelector('.pipeline-phases');
+            if (!container) return;
+
+            container.innerHTML = phases.map((phase, i) => `
+                <div class="phase ${phase.status === 'completed' ? 'completed' : phase.status === 'in_progress' ? 'active' : ''}">
+                    <div class="phase-icon">${getPhaseIcon(phase.name)}</div>
+                    <div class="phase-label">${phase.name}</div>
+                    ${phase.status === 'in_progress' ? '<div class="progress-bar"><div class="progress-bar-fill" style="width: 0%"></div></div>' : ''}
+                </div>
+            `).join('');
+        }
+
+        function getPhaseIcon(phaseName) {
+            const icons = {
+                'Script Analysis': '📝',
+                'Character DNA': '👤',
+                'Style Guides': '🎨',
+                'Storyboard': '🎬',
+                'Video Generation': '🎥',
+                'Quality Assurance': '✅'
+            };
+            return icons[phaseName] || '📋';
+        }
+
+        // Generation progress
+        function updateGenerationProgress(data) {
+            const progressBars = document.querySelectorAll('.progress-bar-fill');
+            progressBars.forEach(bar => {
+                bar.style.width = `${data.progress}%`;
+            });
+
+            if (data.estimated_remaining) {
+                showToast(`Generating... ${data.estimated_remaining}s remaining`, 'info');
+            }
+        }
+
+        // Agent status updates
+        function updateAgentStatus(status) {
+            const metricsContainer = document.querySelector('.metrics');
+            const agentCard = metricsContainer?.querySelector('.agent-status-grid');
+
+            if (!agentCard) {
+                // Add agent status grid if not present
+                const agentMetric = document.createElement('div');
+                agentMetric.className = 'metric-card';
+                agentMetric.innerHTML = `
+                    <div class="metric-label" style="margin-bottom: 10px;">Agent Status</div>
+                    <div class="agent-status-grid"></div>
+                `;
+                metricsContainer?.appendChild(agentMetric);
+            }
+
+            const grid = document.querySelector('.agent-status-grid');
+            if (grid) {
+                grid.innerHTML = Object.entries(status).map(([name, state]) => `
+                    <div class="agent-status-item ${state}">
+                        <div>${name.replace('_', ' ')}</div>
+                        <div style="font-size: 16px; margin-top: 4px;">${state === 'online' ? '🟢' : '🔴'}</div>
+                    </div>
+                `).join('');
+            }
+
+            // Update agents online count
+            const onlineCount = Object.values(status).filter(s => s === 'online').length;
+            const agentMetric = document.querySelector('.metric-value:last-of-type');
+            if (agentMetric && agentMetric.nextElementSibling?.textContent === 'Agents Online') {
+                agentMetric.textContent = onlineCount;
+            }
+        }
+
+        // Activity log
+        function addActivityItem(icon, title, time) {
+            const activityLog = document.querySelector('.activity-log');
+            if (!activityLog) return;
+
+            const firstItem = activityLog.querySelector('.activity-item');
+            const newItem = document.createElement('div');
+            newItem.className = 'activity-item';
+            newItem.innerHTML = `
+                <div class="activity-icon">${icon}</div>
+                <div class="activity-content">
+                    <div class="activity-title">${title}</div>
+                    <div class="activity-time">${time}</div>
+                </div>
+            `;
+
+            if (firstItem) {
+                activityLog.insertBefore(newItem, firstItem);
+            } else {
+                activityLog.appendChild(newItem);
+            }
+        }
+
+        // Cost estimate display
+        function showCostEstimate(data) {
+            showToast(`Estimated cost: $${data.total_estimated_cost} (${data.platform})`, 'info');
+        }
+
+        // Refresh stats from server
+        async function refreshProjectStats() {
+            try {
+                const response = await fetch('/api/production_status');
+                const data = await response.json();
+
+                // Update metrics
+                const metricValues = document.querySelectorAll('.metric-value');
+                if (metricValues.length >= 3) {
+                    metricValues[1].textContent = data.completed_today || 0;
+                    metricValues[2].textContent = data.quality_average?.toFixed(2) || '0.00';
+                }
+            } catch (e) {
+                console.error('Failed to refresh stats:', e);
+            }
+        }
+
+        // Modal functions
+        function uploadNewScript() {
+            document.getElementById('uploadModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('uploadModal').style.display = 'none';
+        }
+
         function openProject(projectId) {
+            currentProjectId = projectId;
+            if (socket) {
+                socket.emit('join_project', { project_id: projectId });
+            }
             window.location.href = `/project/${projectId}`;
         }
-        
-        // Auto-refresh dashboard every 30 seconds
-        setInterval(() => {
-            fetch('/api/production_status')
-                .then(res => res.json())
-                .then(data => {
-                    console.log('Status update:', data);
+
+        // Form submission
+        document.getElementById('scriptUploadForm')?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const btnText = document.getElementById('uploadBtnText');
+            const spinner = document.getElementById('uploadSpinner');
+
+            btnText.style.display = 'none';
+            spinner.style.display = 'inline-block';
+
+            const formData = {
+                title: document.getElementById('scriptTitle').value,
+                author: document.getElementById('scriptAuthor').value,
+                script: document.getElementById('scriptContent').value
+            };
+
+            try {
+                const response = await fetch('/api/upload_script', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData)
                 });
-        }, 30000);
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showToast('Script uploaded successfully! Analyzing...', 'success');
+                    closeModal();
+
+                    // Join project room for updates
+                    if (socket) {
+                        socket.emit('join_project', { project_id: data.script_id });
+                    }
+
+                    // Start production if auto-start enabled
+                    if (socket) {
+                        socket.emit('start_production', { project_id: data.script_id });
+                    }
+                } else {
+                    showToast(data.error || 'Upload failed', 'error');
+                }
+            } catch (err) {
+                showToast('Network error. Please try again.', 'error');
+            } finally {
+                btnText.style.display = 'inline';
+                spinner.style.display = 'none';
+            }
+        });
+
+        // Drag and drop
+        const dropZone = document.getElementById('dropZone');
+
+        dropZone?.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('dragover');
+        });
+
+        dropZone?.addEventListener('dragleave', () => {
+            dropZone.classList.remove('dragover');
+        });
+
+        dropZone?.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+
+            const file = e.dataTransfer.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (evt) => {
+                    document.getElementById('scriptContent').value = evt.target.result;
+                    if (!document.getElementById('scriptTitle').value) {
+                        document.getElementById('scriptTitle').value = file.name.replace(/\.[^/.]+$/, '');
+                    }
+                };
+                reader.readAsText(file);
+            }
+        });
+
+        dropZone?.addEventListener('click', () => {
+            document.getElementById('scriptFile').click();
+        });
+
+        document.getElementById('scriptFile')?.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (evt) => {
+                    document.getElementById('scriptContent').value = evt.target.result;
+                    if (!document.getElementById('scriptTitle').value) {
+                        document.getElementById('scriptTitle').value = file.name.replace(/\.[^/.]+$/, '');
+                    }
+                };
+                reader.readAsText(file);
+            }
+        });
+
+        // Close modal on outside click
+        document.getElementById('uploadModal')?.addEventListener('click', (e) => {
+            if (e.target.id === 'uploadModal') closeModal();
+        });
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeWebSocket();
+            refreshProjectStats();
+
+            // Periodic stats refresh
+            setInterval(refreshProjectStats, 30000);
+        });
     </script>
 </body>
 </html>

@@ -9,9 +9,22 @@ from google_cloud_adk.tools import GoogleSearchTool
 from google.cloud import spanner
 import json
 import hashlib
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional, Tuple, Any
 import os
 import base64
+import logging
+import sys
+
+# Add parent directory to path for imports
+sys.path.insert(0, str(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))))
+
+from utils.resilience import retry_with_backoff, circuit_breaker
+from utils.logging_utils import AgentLogger, set_correlation_id
+from utils.validation import CharacterDNAInput, SceneInput, validate_input
+
+# Configure logging
+logger = logging.getLogger(__name__)
+agent_logger = AgentLogger("visual_consistency")
 
 # Initialize Spanner client
 spanner_client = spanner.Client()
@@ -299,6 +312,497 @@ def generate_consistency_prompt(
         "consistency_tokens": character_dna["consistency_tokens"]
     }
 
+
+def maintain_scene_consistency(
+    current_scene: Dict,
+    character_appearances: Optional[Dict] = None,
+    previous_scenes: Optional[List[Dict]] = None
+) -> Dict:
+    """
+    Maintain visual consistency across scenes.
+    Analyzes current scene against previous scenes and character appearances.
+
+    Args:
+        current_scene: Current scene data with characters, location, time
+        character_appearances: Dict mapping character names to their appearance in scenes
+        previous_scenes: List of previous scene data for continuity checking
+
+    Returns:
+        Consistency analysis with score, recommendations, and issues
+    """
+    logger.info(f"Analyzing scene consistency for scene {current_scene.get('scene_id', 'unknown')}")
+
+    consistency_score = 1.0
+    recommendations = []
+    issues = []
+    continuity_checks = []
+
+    characters_in_scene = current_scene.get("characters", [])
+    current_time = current_scene.get("time", "DAY")
+    current_location = current_scene.get("location", "")
+
+    # Check character appearance consistency
+    if character_appearances and characters_in_scene:
+        for char_name in characters_in_scene:
+            if char_name in character_appearances:
+                char_history = character_appearances[char_name]
+
+                # Check for costume changes within same time period
+                if previous_scenes:
+                    for prev_scene in previous_scenes:
+                        if char_name in prev_scene.get("characters", []):
+                            prev_time = prev_scene.get("time", "DAY")
+
+                            # Same time period should have same costume
+                            if prev_time == current_time and prev_scene.get("location") == current_location:
+                                # Check for costume consistency
+                                scene_id = prev_scene.get("scene_id", "")
+                                if scene_id in char_history:
+                                    prev_costume = char_history[scene_id].get("clothing", "")
+                                    current_costume = char_history.get(current_scene.get("scene_id", ""), {}).get("clothing", "")
+
+                                    if prev_costume and current_costume and prev_costume != current_costume:
+                                        issues.append(f"{char_name}: costume changed from '{prev_costume}' to '{current_costume}' in same location/time")
+                                        consistency_score -= 0.15
+
+    # Check lighting consistency with time of day
+    lighting_map = {
+        "DAY": ["natural", "bright", "warm", "sunlight"],
+        "NIGHT": ["dark", "low-key", "moonlight", "artificial"],
+        "DAWN": ["golden", "soft", "warm", "orange"],
+        "DUSK": ["purple", "orange", "magic hour", "golden"],
+    }
+
+    expected_lighting = lighting_map.get(current_time.upper(), lighting_map["DAY"])
+    continuity_checks.append({
+        "check": "lighting_consistency",
+        "expected": expected_lighting,
+        "time_of_day": current_time
+    })
+
+    # Check scene transition logic
+    if previous_scenes:
+        last_scene = previous_scenes[-1]
+        last_location = last_scene.get("location", "")
+        last_time = last_scene.get("time", "DAY")
+
+        # Flag unrealistic time jumps without transition
+        time_order = ["DAWN", "MORNING", "DAY", "AFTERNOON", "DUSK", "NIGHT"]
+
+        if last_time.upper() in time_order and current_time.upper() in time_order:
+            last_idx = time_order.index(last_time.upper())
+            curr_idx = time_order.index(current_time.upper())
+
+            # Backwards time jump without scene break
+            if curr_idx < last_idx and curr_idx != 0:
+                recommendations.append(
+                    f"Consider adding transition for time change from {last_time} to {current_time}"
+                )
+
+        # Check for character continuity
+        last_chars = set(last_scene.get("characters", []))
+        curr_chars = set(characters_in_scene)
+
+        # Characters that disappeared without exit
+        disappeared = last_chars - curr_chars
+        if disappeared and last_location == current_location:
+            recommendations.append(
+                f"Characters {list(disappeared)} were in previous scene at same location but not in current"
+            )
+
+    # Calculate final score
+    consistency_score = max(0.0, min(1.0, consistency_score))
+
+    return {
+        "consistency_score": consistency_score,
+        "passed": consistency_score >= 0.8,
+        "issues": issues,
+        "recommendations": recommendations,
+        "continuity_checks": continuity_checks,
+        "scene_id": current_scene.get("scene_id"),
+        "characters_analyzed": characters_in_scene
+    }
+
+
+def check_visual_continuity(
+    current_scene: Dict,
+    previous_scene: Dict
+) -> Dict:
+    """
+    Check visual continuity between two consecutive scenes.
+    Validates that visual elements maintain logical consistency.
+
+    Args:
+        current_scene: Current scene data
+        previous_scene: Previous scene data with visual elements
+
+    Returns:
+        Continuity analysis with issues and recommendations
+    """
+    logger.info("Checking visual continuity between scenes")
+
+    is_continuous = True
+    issues = []
+    recommendations = []
+    visual_checks = []
+
+    # Extract visual elements
+    prev_visuals = previous_scene.get("visual_elements", {})
+    curr_time = current_scene.get("time", "DAY")
+    prev_time = previous_scene.get("time", "DAY")
+    curr_location = current_scene.get("location", "")
+    prev_location = previous_scene.get("location", "")
+
+    # Same location checks
+    if curr_location == prev_location:
+        # Check for set dressing consistency
+        visual_checks.append({
+            "check": "same_location_continuity",
+            "location": curr_location,
+            "status": "requires_same_set"
+        })
+
+        # Time progression should be logical
+        if curr_time != prev_time:
+            recommendations.append(
+                f"Time changed from {prev_time} to {curr_time} at same location - ensure lighting reflects this"
+            )
+
+    # Character visual continuity
+    curr_chars = set(current_scene.get("characters", []))
+    prev_chars = set(previous_scene.get("characters", []))
+    common_chars = curr_chars & prev_chars
+
+    for char in common_chars:
+        if char in prev_visuals:
+            char_visual = prev_visuals[char]
+
+            # Check if character should maintain appearance
+            if curr_location == prev_location:
+                visual_checks.append({
+                    "check": "character_appearance",
+                    "character": char,
+                    "expected_clothing": char_visual.get("clothing"),
+                    "expected_hair": char_visual.get("hair_style")
+                })
+
+            # Note any injuries or changes that should persist
+            if char_visual.get("injuries") or char_visual.get("damage"):
+                recommendations.append(
+                    f"Character {char} had visible injuries/damage in previous scene - maintain continuity"
+                )
+
+    # Prop continuity
+    prev_props = set(previous_scene.get("props", []))
+    curr_props = set(current_scene.get("props", []))
+
+    if curr_location == prev_location:
+        missing_props = prev_props - curr_props
+        if missing_props:
+            issues.append(f"Props missing from same location: {list(missing_props)}")
+            is_continuous = False
+
+    # Weather continuity (if outdoor)
+    if "EXT" in curr_location or "EXT" in prev_location:
+        prev_weather = previous_scene.get("weather", "clear")
+        curr_weather = current_scene.get("weather", "clear")
+
+        if prev_weather != curr_weather and curr_time == prev_time:
+            recommendations.append(
+                f"Weather changed from {prev_weather} to {curr_weather} - add transition if intentional"
+            )
+
+    return {
+        "is_continuous": is_continuous and len(issues) == 0,
+        "issues": issues,
+        "recommendations": recommendations,
+        "visual_checks": visual_checks,
+        "common_characters": list(common_chars),
+        "same_location": curr_location == prev_location
+    }
+
+
+def generate_visual_prompt(
+    scene_context: Dict,
+    character_dna: Optional[Dict] = None,
+    platform: str = "stable_diffusion"
+) -> Dict:
+    """
+    Generate optimized visual prompt for AI generation platforms.
+    Creates platform-specific prompts with character DNA integration.
+
+    Args:
+        scene_context: Scene description, location, time, mood, camera_angle
+        character_dna: Dict of character DNAs keyed by name
+        platform: Target platform (stable_diffusion, midjourney, dalle3, runway, etc.)
+
+    Returns:
+        Platform-optimized prompt with style tags and negative prompts
+    """
+    logger.info(f"Generating visual prompt for platform: {platform}")
+
+    description = scene_context.get("description", "")
+    characters = scene_context.get("characters", [])
+    location = scene_context.get("location", "")
+    time_of_day = scene_context.get("time", "DAY")
+    mood = scene_context.get("mood", "neutral")
+    camera_angle = scene_context.get("camera_angle", "medium shot")
+
+    # Build character descriptions from DNA
+    char_descriptions = []
+    if character_dna and characters:
+        for char_name in characters:
+            if char_name in character_dna:
+                dna = character_dna[char_name]
+                phys = dna.get("physical_attributes", {})
+
+                char_desc = f"{char_name.lower()}"
+
+                if phys.get("age"):
+                    char_desc = f"{phys['age']}-year-old {char_desc}"
+
+                if phys.get("hair_color"):
+                    char_desc += f" with {phys['hair_color']} hair"
+
+                if phys.get("eye_color"):
+                    char_desc += f" and {phys['eye_color']} eyes"
+
+                if phys.get("build") and phys["build"] != "average":
+                    char_desc += f", {phys['build']} build"
+
+                char_descriptions.append(char_desc)
+
+    # Build lighting based on time
+    lighting_styles = {
+        "DAY": "natural daylight, soft shadows",
+        "NIGHT": "low-key lighting, cinematic shadows, practical lights",
+        "DAWN": "golden hour lighting, warm orange tones, long shadows",
+        "DUSK": "magic hour, purple and orange sky, soft diffused light",
+        "AFTERNOON": "harsh sunlight, high contrast, strong shadows",
+        "MORNING": "soft morning light, gentle warmth"
+    }
+    lighting = lighting_styles.get(time_of_day.upper(), lighting_styles["DAY"])
+
+    # Build mood modifiers
+    mood_modifiers = {
+        "tense": "dramatic lighting, high contrast, moody atmosphere",
+        "romantic": "soft focus, warm tones, intimate lighting",
+        "action": "dynamic angle, motion blur hints, intense",
+        "sad": "muted colors, overcast, melancholic atmosphere",
+        "happy": "bright, vibrant colors, warm sunlight",
+        "mysterious": "fog, shadows, dramatic chiaroscuro",
+        "peaceful": "serene, calm, gentle light"
+    }
+    mood_style = mood_modifiers.get(mood.lower(), "")
+
+    # Platform-specific prompt construction
+    style_tags = []
+    negative_prompt = ""
+    parameters = {}
+
+    if platform in ["stable_diffusion", "midjourney", "dalle3"]:
+        # Image generation platforms
+        style_tags = [
+            "cinematic",
+            "professional photography",
+            "8k resolution",
+            "detailed",
+            "photorealistic"
+        ]
+
+        negative_prompt = "cartoon, anime, illustration, painting, drawing, " \
+                         "low quality, blurry, distorted, disfigured, " \
+                         "bad anatomy, bad proportions, watermark, text"
+
+        if platform == "midjourney":
+            # Midjourney-specific formatting
+            prompt_parts = [description]
+            if char_descriptions:
+                prompt_parts.append(", ".join(char_descriptions))
+            prompt_parts.extend([location, lighting, mood_style, camera_angle])
+
+            prompt = ", ".join(filter(None, prompt_parts))
+            prompt += " --ar 16:9 --style raw --v 6"
+
+            parameters = {
+                "aspect_ratio": "16:9",
+                "version": "6",
+                "style": "raw"
+            }
+
+        elif platform == "dalle3":
+            prompt_parts = [
+                f"Cinematic {camera_angle} of",
+                description
+            ]
+            if char_descriptions:
+                prompt_parts.append("featuring " + " and ".join(char_descriptions))
+            prompt_parts.extend([f"in {location}", lighting, mood_style])
+
+            prompt = " ".join(filter(None, prompt_parts))
+
+            parameters = {
+                "quality": "hd",
+                "size": "1792x1024"
+            }
+
+        else:  # stable_diffusion
+            prompt_parts = [
+                f"({camera_angle}:1.2)",
+                description
+            ]
+            if char_descriptions:
+                prompt_parts.append(", ".join(char_descriptions))
+            prompt_parts.extend([location, f"({lighting}:1.1)", mood_style])
+            prompt_parts.extend(style_tags)
+
+            prompt = ", ".join(filter(None, prompt_parts))
+
+            parameters = {
+                "steps": 30,
+                "cfg_scale": 7.5,
+                "sampler": "DPM++ 2M Karras",
+                "width": 1920,
+                "height": 1080
+            }
+
+    elif platform in ["runway", "pika", "veo2", "sora"]:
+        # Video generation platforms
+        style_tags = [
+            "cinematic",
+            "professional film",
+            "high quality",
+            "smooth motion"
+        ]
+
+        negative_prompt = "glitchy, flickering, morphing, distorted, low quality"
+
+        prompt_parts = [
+            f"Cinematic {camera_angle}:",
+            description
+        ]
+        if char_descriptions:
+            prompt_parts.append(", ".join(char_descriptions))
+        prompt_parts.extend([location, lighting, mood_style])
+
+        prompt = " ".join(filter(None, prompt_parts))
+
+        if platform == "runway":
+            parameters = {
+                "motion_amount": 5,
+                "camera_motion": "smooth",
+                "duration": 5
+            }
+        elif platform == "pika":
+            parameters = {
+                "aspect_ratio": "16:9",
+                "fps": 24,
+                "motion_strength": 0.7
+            }
+        elif platform == "veo2":
+            parameters = {
+                "duration": 8,
+                "quality": "high",
+                "style": "cinematic"
+            }
+        elif platform == "sora":
+            parameters = {
+                "duration": 10,
+                "quality": "hd",
+                "style": "cinematic"
+            }
+
+    else:
+        # Default/generic platform
+        prompt = f"{camera_angle}: {description}"
+        if char_descriptions:
+            prompt += f", featuring {', '.join(char_descriptions)}"
+        prompt += f", {location}, {lighting}"
+
+    return {
+        "prompt": prompt,
+        "negative_prompt": negative_prompt,
+        "style_tags": style_tags,
+        "parameters": parameters,
+        "platform": platform,
+        "scene_context": {
+            "location": location,
+            "time_of_day": time_of_day,
+            "mood": mood,
+            "camera_angle": camera_angle
+        },
+        "characters_included": characters
+    }
+
+
+def get_character_dna(character_id: str) -> Optional[Dict]:
+    """
+    Retrieve Character DNA from database.
+
+    Args:
+        character_id: Character ID to retrieve
+
+    Returns:
+        Character DNA dict or None if not found
+    """
+    try:
+        instance = spanner_client.instance(instance_id)
+        database = instance.database(database_id)
+
+        with database.snapshot() as snapshot:
+            results = snapshot.execute_sql(
+                "SELECT visual_dna FROM Character WHERE character_id = @char_id",
+                params={"char_id": character_id},
+                param_types={"char_id": spanner.param_types.STRING}
+            )
+
+            for row in results:
+                if row[0]:
+                    return json.loads(row[0])
+
+        return None
+
+    except Exception as e:
+        logger.error(f"Error retrieving character DNA: {e}")
+        return None
+
+
+def batch_create_character_dnas(characters: List[Dict]) -> List[Dict]:
+    """
+    Create Character DNA profiles for multiple characters.
+
+    Args:
+        characters: List of character dicts with name, description, age
+
+    Returns:
+        List of created Character DNA profiles
+    """
+    logger.info(f"Creating Character DNA for {len(characters)} characters")
+
+    dnas = []
+    for char in characters:
+        try:
+            dna = create_character_dna(
+                name=char.get("name", "Unknown"),
+                description=char.get("description", ""),
+                age=char.get("age"),
+                reference_images=char.get("reference_images")
+            )
+            dnas.append(dna)
+
+            # Store in database
+            store_character_dna(dna)
+
+        except Exception as e:
+            logger.error(f"Error creating DNA for {char.get('name')}: {e}")
+            dnas.append({
+                "error": str(e),
+                "name": char.get("name")
+            })
+
+    return dnas
+
+
 # Create the Visual Consistency Agent
 visual_consistency = Agent(
     model="gemini-2.0-flash",
@@ -345,6 +849,11 @@ visual_consistency = Agent(
         Tool(create_scene_style_guide),
         Tool(generate_consistency_prompt),
         Tool(store_character_dna),
+        Tool(maintain_scene_consistency),
+        Tool(check_visual_continuity),
+        Tool(generate_visual_prompt),
+        Tool(get_character_dna),
+        Tool(batch_create_character_dnas),
         GoogleSearchTool()
     ]
 )

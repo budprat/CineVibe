@@ -422,16 +422,147 @@ def broadcast_pipeline_update(project_id, phase, status, progress=None):
     socketio.emit('pipeline_update', update, room=f"project_{project_id}")
     logger.info(f"Broadcast update for project {project_id}: {phase} - {status}")
 
-def broadcast_generation_complete(project_id, asset_type, asset_url):
+def broadcast_generation_complete(project_id, asset_type, asset_url, quality_score=None):
     """Broadcast when a generation is complete"""
     update = {
         'project_id': project_id,
         'type': 'generation_complete',
         'asset_type': asset_type,
         'asset_url': asset_url,
+        'quality_score': quality_score,
         'timestamp': datetime.utcnow().isoformat()
     }
     socketio.emit('generation_complete', update, room=f"project_{project_id}")
+
+
+def broadcast_generation_progress(project_id, job_id, platform, progress, estimated_remaining=None):
+    """Broadcast generation progress updates"""
+    update = {
+        'project_id': project_id,
+        'job_id': job_id,
+        'platform': platform,
+        'progress': progress,
+        'estimated_remaining': estimated_remaining,
+        'timestamp': datetime.utcnow().isoformat()
+    }
+    socketio.emit('generation_progress', update, room=f"project_{project_id}")
+
+
+def broadcast_error(project_id, error_type, message, recoverable=True):
+    """Broadcast error notifications"""
+    update = {
+        'project_id': project_id,
+        'error_type': error_type,
+        'message': message,
+        'recoverable': recoverable,
+        'timestamp': datetime.utcnow().isoformat()
+    }
+    socketio.emit('error', update, room=f"project_{project_id}")
+
+
+def broadcast_character_dna_created(project_id, character_name, character_id):
+    """Broadcast when a character DNA is created"""
+    update = {
+        'project_id': project_id,
+        'type': 'character_dna_created',
+        'character_name': character_name,
+        'character_id': character_id,
+        'timestamp': datetime.utcnow().isoformat()
+    }
+    socketio.emit('character_update', update, room=f"project_{project_id}")
+
+
+def broadcast_scene_analyzed(project_id, scene_id, scene_number, location):
+    """Broadcast when a scene is analyzed"""
+    update = {
+        'project_id': project_id,
+        'type': 'scene_analyzed',
+        'scene_id': scene_id,
+        'scene_number': scene_number,
+        'location': location,
+        'timestamp': datetime.utcnow().isoformat()
+    }
+    socketio.emit('scene_update', update, room=f"project_{project_id}")
+
+
+@socketio.on('start_production')
+def handle_start_production(data):
+    """Start full production pipeline via WebSocket"""
+    project_id = data.get('project_id')
+    if not project_id:
+        emit('error', {'message': 'Project ID required'})
+        return
+
+    # Join the project room
+    join_room(f"project_{project_id}")
+
+    # Emit initial status
+    emit('production_started', {
+        'project_id': project_id,
+        'phases': [
+            {'phase': 1, 'name': 'Script Analysis', 'status': 'pending'},
+            {'phase': 2, 'name': 'Character DNA', 'status': 'pending'},
+            {'phase': 3, 'name': 'Style Guides', 'status': 'pending'},
+            {'phase': 4, 'name': 'Storyboard', 'status': 'pending'},
+            {'phase': 5, 'name': 'Video Generation', 'status': 'pending'},
+            {'phase': 6, 'name': 'Quality Assurance', 'status': 'pending'},
+        ],
+        'timestamp': datetime.utcnow().isoformat()
+    })
+
+
+@socketio.on('generate_asset')
+def handle_generate_asset(data):
+    """Request asset generation via WebSocket"""
+    project_id = data.get('project_id')
+    scene_id = data.get('scene_id')
+    asset_type = data.get('asset_type', 'image')  # 'image' or 'video'
+    platform = data.get('platform', 'auto')
+
+    if not project_id or not scene_id:
+        emit('error', {'message': 'Project ID and Scene ID required'})
+        return
+
+    # Emit generation started
+    emit('generation_started', {
+        'project_id': project_id,
+        'scene_id': scene_id,
+        'asset_type': asset_type,
+        'platform': platform,
+        'timestamp': datetime.utcnow().isoformat()
+    })
+
+
+@socketio.on('get_cost_estimate')
+def handle_cost_estimate(data):
+    """Get cost estimate for generation"""
+    project_id = data.get('project_id')
+    scenes_count = data.get('scenes_count', 1)
+    platform = data.get('platform', 'runway')
+    duration_per_scene = data.get('duration', 5)
+
+    # Cost estimates per platform (per second of video)
+    costs = {
+        'runway': 0.15,
+        'pika': 0.10,
+        'sora': 0.20,
+        'veo2': 0.18,
+        'midjourney': 0.05,  # per image
+        'stable_diffusion': 0.02,  # per image
+    }
+
+    per_second_cost = costs.get(platform, 0.10)
+    total_cost = scenes_count * duration_per_scene * per_second_cost
+
+    emit('cost_estimate', {
+        'project_id': project_id,
+        'platform': platform,
+        'scenes_count': scenes_count,
+        'duration_per_scene': duration_per_scene,
+        'per_second_cost': per_second_cost,
+        'total_estimated_cost': round(total_cost, 2),
+        'currency': 'USD'
+    })
 
 def monitor_agent_status():
     """Background thread to monitor agent status"""
